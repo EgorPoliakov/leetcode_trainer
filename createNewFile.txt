@@ -1,2 +1,5 @@
-hello
-testing
+-common command-
+git status
+git add <filename>
+git commit -m "message to commit"
+git push origin master
