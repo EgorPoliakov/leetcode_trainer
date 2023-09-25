@@ -124,7 +124,7 @@ async def get_question_data(
 
     return {
         'id': str(await leetcode_data.problem_id(leetcode_task_handle)),
-        'link': f'https://leetcode.com/problems/{leetcode_task_handle}',
+        'url': f'https://leetcode.com/problems/{leetcode_task_handle}',
         'title': str(await leetcode_data.title(leetcode_task_handle)),
         'category': str(await leetcode_data.category(leetcode_task_handle)),
         'difficulty': problem_difficulty,
