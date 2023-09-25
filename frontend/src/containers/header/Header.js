@@ -3,7 +3,7 @@ import { Navbar } from '../../components';
 
 function Header() {
     return (
-        <div className='bg-green-600 col-span-full'>
+        <div className='col-span-full'>
             <Navbar />
         </div>
     );
