@@ -30,7 +30,7 @@ function Cards() {
     const updateCardHandler = (quality) => {
         setCards((prevCards) => {
             prevCards.map((card) => {
-                if (card.id == cards[currentCardIdx]) {
+                if (card.id === cards[currentCardIdx]) {
                     card.quality = quality;
                 }
             });
@@ -47,7 +47,7 @@ function Cards() {
     }
 
     return (
-        <div>
+        <div className='flex justify-center items-center col-start-2 col-end-10 bg-gray-200'>
             {cardElement}
         </div>
     );

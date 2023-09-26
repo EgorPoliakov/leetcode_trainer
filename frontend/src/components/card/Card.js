@@ -5,7 +5,7 @@ function Card({ updateCardHandler, cardData }) {
     const good_quality = 3;
     const easy_quality = 4;
     return (
-        <div className='flex flex-col w-96'>
+        <div className='flex flex-col rounded-md bg-white place-content-center h-32'>
             <a href={cardData.url} className='text-center'>{cardData.title}</a>
             <p className='text-center'>{cardData.difficulty}</p>
             <div className='flex place-content-center'>

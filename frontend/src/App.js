@@ -3,11 +3,9 @@ import { Header, Footer, Cards } from './containers';
 
 function App() {
   return (
-    <div className='grid grid-rows-3 grid-cols-layout'>
+    <div className='grid grid-rows-layout grid-cols-layout min-h-full'>
       <Header />
-      <div className='flex place-content-center col-start-2 col-end-10'>
-        <Cards />
-      </div>
+      <Cards />
       <Footer />
     </div>
   );
