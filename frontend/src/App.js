@@ -1,13 +1,19 @@
-import './App.css';
-import { Header, Footer, Cards } from './containers';
+import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
+import { Cards, Decks } from './containers';
+import './App.css'
+import Layout from './Layout';
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path='/' element={<Layout />}>
+      <Route path='/study' element={<Cards />} />
+      <Route path='/decks' element={<Decks />} />
+    </Route>
+  )
+);
 
 function App() {
   return (
-    <div className='grid grid-rows-layout grid-cols-layout min-h-full'>
-      <Header />
-      <Cards />
-      <Footer />
-    </div>
+    <RouterProvider router={router}/>
   );
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Card } from '../../components';
 
 const mockCards = [
@@ -24,6 +25,8 @@ const mockCards = [
 ]
 
 function Cards() {
+    const location = useLocation();
+    const deckId = location.state;
     const [cards, setCards] = useState(mockCards);
     const [currentCardIdx, setCurrentCardIdx] = useState(0);
 
@@ -33,6 +36,7 @@ function Cards() {
                 if (card.id === cards[currentCardIdx]) {
                     card.quality = quality;
                 }
+                return card;
             });
             return [...prevCards];
         });
@@ -47,7 +51,8 @@ function Cards() {
     }
 
     return (
-        <div className='flex justify-center items-center col-start-2 col-end-10 bg-gray-200'>
+        <div className='flex justify-center items-center col-start-2 col-end-10'>
+            <p>{deckId}</p>
             {cardElement}
         </div>
     );
