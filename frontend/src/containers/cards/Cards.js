@@ -51,10 +51,14 @@ function Cards() {
     }
 
     return (
-        <div className='flex justify-center items-center col-start-2 col-end-10'>
-            <p>{deckId}</p>
-            {cardElement}
+        <div className='col-start-2 col-end-10'>
+            <h2 className='text-center justify-self-start p-5'>Deck {deckId}</h2>
+            <div className='flex h-full items-center justify-center -mt-16'>
+                {cardElement}
+            </div>
         </div>
+        
+        
     );
 }
 
