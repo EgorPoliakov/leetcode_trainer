@@ -10,7 +10,7 @@ class Question(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, unique=True, index=True)
     url = Column(String)
-    difficulty = Column(String)
+    difficulty = Column(Integer)
     is_premium = Column(Boolean)
     question_card = relationship('QuestionCard', back_populates='question')
 
@@ -42,7 +42,7 @@ class Deck(Base):
     __tablename__ = 'deck'
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, unique=True, index=True)
-    difficulty = Column(String)
+    difficulty = Column(Integer)
     description = Column(String)
 
     question_cards = relationship('QuestionCard', back_populates='deck')

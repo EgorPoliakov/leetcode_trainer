@@ -1,53 +1,52 @@
 import React from 'react'
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import { Card } from '../../components';
-
-const mockCards = [
-    {
-        id: "1",
-        url: "https://leetcode.com/problems/two-sum",
-        title: "Two Sum",
-        category: "Algorithms",
-        difficulty: "easy",
-        is_premium: false,
-        quality: 4
-    },
-    {
-        id: "2",
-        url: "https://leetcode.com/problems/add-two-numbers",
-        title: "Add Two Numbers",
-        category: "Algorithms",
-        difficulty: "medium",
-        is_premium: false,
-        quality: 3
-    }
-]
+import api from '../../Api';
 
 function Cards() {
     const location = useLocation();
     const deckId = location.state;
-    const [cards, setCards] = useState(mockCards);
+    const [deck, setDeck] = useState({question_cards: []});
     const [currentCardIdx, setCurrentCardIdx] = useState(0);
 
+    const fetchDeck = async () => {
+        const response = await api.get(`/decks/${deckId}`);
+        setDeck(response.data);
+    };
+
+    const finishCardHandler = async (quality) => {
+        const reviewId = deck.question_cards[currentCardIdx].question_reviews[0].id;
+        const requestData = {quality: quality};
+        console.log(requestData);
+        const response = await api.put(`/reviews/${reviewId}`, requestData);
+        console.log(response.data);
+    }
+
     const updateCardHandler = (quality) => {
-        setCards((prevCards) => {
-            prevCards.map((card) => {
-                if (card.id === cards[currentCardIdx]) {
-                    card.quality = quality;
-                }
-                return card;
-            });
-            return [...prevCards];
-        });
+        finishCardHandler(quality);
         setCurrentCardIdx(
             (prevCardIdx) => prevCardIdx + 1
         );
     }
 
-    let cardElement = <Card updateCardHandler={updateCardHandler} cardData={cards[currentCardIdx]}/>;
-    if (currentCardIdx >= cards.length) {
-        cardElement = <p>Finished all cards!</p>
+    useEffect(() => {
+        fetchDeck();
+    }, [currentCardIdx]);
+
+    let cardElement = <Card updateCardHandler={updateCardHandler} cardData={deck.question_cards[currentCardIdx]}/>;
+    if (deck.question_cards.length == 0) {
+        cardElement = <div>
+            Loading
+        </div>
+    }
+
+    if (currentCardIdx != 0 && currentCardIdx >= deck.question_cards.length) {
+        cardElement = <div>
+            Finished all cards!
+            <Link to='/decks'>Home</Link>
+        </div>
+
     }
 
     return (

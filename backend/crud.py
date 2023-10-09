@@ -53,8 +53,12 @@ def create_card(db: Session, question: schemas.QuestionCardCreate):
     return db_card
 
 def read_deck(db: Session, deck_id: int):
-    db_deck = db.query(models.Deck).filter(models.Deck.id == deck_id)
+    db_deck = db.query(models.Deck).filter(models.Deck.id == deck_id).first()
     return db_deck
+
+def read_decks(db: Session, skip: int=0, limit: int=100):
+    db_decks = db.query(models.Deck).offset(skip).limit(limit).all()
+    return db_decks
 
 def create_deck(db: Session, deck: schemas.DeckCreate):
     db_deck = models.Deck(

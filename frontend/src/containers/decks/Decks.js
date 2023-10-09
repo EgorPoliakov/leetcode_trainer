@@ -1,184 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Deck } from '../../components';
-
-const decks = [
-    {
-        id: 0,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 1,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {   
-        id: 2,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    { 
-        id: 3,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 4,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 5,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {   id: 6,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    { 
-        id: 7,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 8,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 9,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {   id: 10,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    { 
-        id: 11,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 0,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 1,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {   
-        id: 2,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    { 
-        id: 3,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 4,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 5,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {   id: 6,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    { 
-        id: 7,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 8,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 9,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {   id: 10,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    { 
-        id: 11,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 0,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 1,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {   
-        id: 2,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    { 
-        id: 3,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 4,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 5,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {   id: 6,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    { 
-        id: 7,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 8,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {
-        id: 9,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    {   id: 10,
-        title: 'some deck',
-        difficulty: 'beginner'
-    },
-    { 
-        id: 11,
-        title: 'some deck',
-        difficulty: 'beginner'
-    }
-]
+import api from '../../Api';
 
 function Decks() {
+    const [decks, setDecks] = useState([]);
+
+    const fetchDecks = async () => {
+        const response = await api.get('/decks?skip=0&limit=2');
+        setDecks(response.data);
+    }
+
+    useEffect(() => {
+        fetchDecks();
+    }, []);
+
     const decksElement = decks.map((deck) => {
         return <Deck deckData={deck} key={deck.id} />
     });

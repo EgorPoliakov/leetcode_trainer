@@ -1,14 +1,17 @@
 import React from 'react'
+import DifficultyLabel from '../difficulty_label/DifficultyLabel';
 
 function Card({ updateCardHandler, cardData }) {
+    const question = cardData.question;
+
     const again_quality = 0;
     const good_quality = 3;
     const easy_quality = 4;
     return (
         <div className='flex flex-col justify-between rounded-md bg-white shadow-md'>
             <div className='flex flex-col bg-gradient-to-b from-blue-500 to-blue-300 items-start rounded-t-md p-2'>
-                <a href={cardData.url} className='text-white mb-3'>{cardData.title}</a>
-                <div className='focus:outline-none bg-yellow-300 font-medium rounded-xl text-sm px-4 py-1'>{cardData.difficulty}</div>
+                <a href={question.url} className='text-white mb-3'>{question.title}</a>
+                <DifficultyLabel difficulty={question.difficulty}/>
             </div>
             <div className='flex place-content-center p-2'>
                 <button 

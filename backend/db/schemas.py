@@ -4,7 +4,7 @@ from datetime import datetime
 class QuestionCreate(BaseModel):
     title: str
     url: str
-    difficulty: str
+    difficulty: int
     is_premium: bool
 
     class Config:
@@ -46,7 +46,7 @@ class QuestionCardRead(BaseModel):
 
 class DeckCreate(BaseModel):
     title: str
-    difficulty: str
+    difficulty: int
     description: str
     class Config:
         from_attributes = True
@@ -54,3 +54,11 @@ class DeckCreate(BaseModel):
 class DeckRead(DeckCreate):
     id: int
     question_cards: list[QuestionCardRead]
+
+class DeckReadSimple(DeckCreate):
+    id: int
+    cards_learned: int
+    cards_studying: int
+
+class QuestionReviewUpdate(BaseModel):
+    quality: int

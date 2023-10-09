@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
+
 from sqlalchemy.orm import Session
 from db import models
 from db import schemas
@@ -8,6 +10,16 @@ import crud
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_db():
     db = SessionLocal()
@@ -21,7 +33,7 @@ def create_test_db(db: Session = Depends(get_db)):
     question = schemas.QuestionCreate(
         title='test question',
         url='http://test_url.com',
-        difficulty='hard',
+        difficulty=2,
         is_premium=False
     )
 
@@ -29,7 +41,7 @@ def create_test_db(db: Session = Depends(get_db)):
 
     deck = schemas.DeckCreate(
         title='test deck',
-        difficulty='hard',
+        difficulty=2,
         description='this is a test deck'
     )
 
@@ -40,6 +52,7 @@ def create_test_db(db: Session = Depends(get_db)):
         type=0,
         deck_id=created_deck.id
     )
+
     created_card = crud.create_card(db, card)
     
     return created_deck
@@ -60,7 +73,12 @@ def read_cards(skip: int, limit: int, db: Session = Depends(get_db)):
     print(cards[0].__dict__)
     return cards
 
-@app.get('/decks/{deck_id}', response_model=list[schemas.DeckRead])
+@app.get('/decks', response_model=list[schemas.DeckReadSimple])
+def read_decks(skip: int, limit: int, db: Session = Depends(get_db)):
+    decks = crud.read_decks(db, skip, limit)
+    return decks
+
+@app.get('/decks/{deck_id}', response_model=schemas.DeckRead)
 def read_deck(deck_id: int, db: Session = Depends(get_db)):
     deck = crud.read_deck(db, deck_id)
     return deck
@@ -87,7 +105,8 @@ def create_deck(deck: schemas.DeckCreate, db: Session = Depends(get_db)):
     return created_deck
 
 @app.put('/reviews/{review_id}', response_model=schemas.QuestionReviewRead)
-def update_review(review_id: int, quality: int, db: Session = Depends(get_db)):
+def update_review(review_id, question_review: schemas.QuestionReviewUpdate, db: Session = Depends(get_db)):
+    quality = question_review.quality
     updated_review = crud.update_review(db, review_id, quality)
     return updated_review
 
