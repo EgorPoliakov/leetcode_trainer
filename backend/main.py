@@ -67,13 +67,12 @@ def read_questions(skip: int, limit: int, db: Session = Depends(get_db)):
     questions = crud.read_question(db, skip, limit)
     return questions
 
-@app.get('/cards/', response_model=list[schemas.QuestionCardRead])
+@app.get('/cards', response_model=list[schemas.QuestionCardRead])
 def read_cards(skip: int, limit: int, db: Session = Depends(get_db)):
     cards = crud.read_cards(db, skip, limit)
-    print(cards[0].__dict__)
     return cards
 
-@app.get('/decks', response_model=list[schemas.DeckReadSimple])
+@app.get('/decks', response_model=list[schemas.DeckRead])
 def read_decks(skip: int, limit: int, db: Session = Depends(get_db)):
     decks = crud.read_decks(db, skip, limit)
     return decks
@@ -81,6 +80,11 @@ def read_decks(skip: int, limit: int, db: Session = Depends(get_db)):
 @app.get('/decks/{deck_id}', response_model=schemas.DeckRead)
 def read_deck(deck_id: int, db: Session = Depends(get_db)):
     deck = crud.read_deck(db, deck_id)
+    return deck
+
+@app.get('/decks/{deck_id}/study', response_model=list[schemas.QuestionCardRead])
+def read_deck_for_study(deck_id: int, db: Session = Depends(get_db)):
+    deck = crud.read_deck_for_study(db, deck_id)
     return deck
 
 @app.get('/reviews/', response_model=list[schemas.QuestionReviewRead])

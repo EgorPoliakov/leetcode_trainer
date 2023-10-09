@@ -53,10 +53,6 @@ class DeckCreate(BaseModel):
 
 class DeckRead(DeckCreate):
     id: int
-    question_cards: list[QuestionCardRead]
-
-class DeckReadSimple(DeckCreate):
-    id: int
     cards_learned: int
     cards_studying: int
 

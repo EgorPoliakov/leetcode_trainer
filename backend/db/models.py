@@ -1,6 +1,6 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float
 from sqlalchemy.orm import relationship, mapped_column
-from sqlalchemy.sql.functions import now
+from datetime import date
 from .database import Base
 
 
@@ -21,7 +21,7 @@ class QuestionReview(Base):
     easiness = Column(Float, default=0)
     interval = Column(Integer, default=0)
     repetitions = Column(Integer, default=0)
-    review_date = Column(DateTime, time_zone=True, default=now())
+    review_date = Column(Date, time_zone=True, default=date.today())
     first_review = Column(Boolean, default=True)
 
     question_card_id = mapped_column(ForeignKey('question_card.id'))

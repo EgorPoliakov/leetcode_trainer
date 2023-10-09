@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import DifficultyLabel from '../difficulty_label/DifficultyLabel';
 
 function Deck({deckData}) {
-    
+    const cardsLearned = deckData.cards_learned
+    const cardsStudying = deckData.cards_studying
+    const cardsOverall = cardsLearned + cardsStudying
     return (
         <div className='flex flex-col justify-between rounded-md bg-white shadow-md'>
             <div className='flex flex-col bg-gradient-to-b from-blue-500 to-blue-300 items-start rounded-t-md p-2'>
@@ -12,7 +14,7 @@ function Deck({deckData}) {
             </div>
             <div className='flex place-content-center justify-evenly p-2'>
                 <div className='flex flex-col text-center'>
-                    <div className='text-xl font-bold'>10</div>
+                    <div className='text-xl font-bold'>{cardsOverall}</div>
                     <div className='text-gray-400'>Cards</div>
                 </div>
                 <Link className='flex items-center' to={`/study`} state={deckData.id}>Study</Link>

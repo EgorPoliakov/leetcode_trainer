@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from db import models
 from db import schemas
 from supermemo2 import SMTwo
+from datetime import date
 
 def create_question(db: Session, question):
     db_question = models.Question(
@@ -21,6 +22,17 @@ def read_question(db: Session, skip: int=0, limit: int=10):
 
 def read_cards(db: Session, skip: int=0, limit: int=10):
     cards = db.query(models.QuestionCard).offset(skip).limit(limit).all()
+    return cards
+
+def read_deck_for_study(db: Session, deck_id):
+    cards = (
+        db
+        .query(models.QuestionCard)
+        .join(models.QuestionReview)
+        .filter(models.QuestionReview.review_date == date.today())
+        .filter(models.QuestionCard.deck_id == deck_id)
+    )
+    
     return cards
 
 def read_reviews(db: Session, skip: int=0, limit: int=10):
@@ -46,7 +58,6 @@ def create_card(db: Session, question: schemas.QuestionCardCreate):
     )
     db.add(db_card)
     db.commit()
-    
 
     db_question_review = create_question_review(db, db_card)
     db.refresh(db_card)
@@ -58,6 +69,15 @@ def read_deck(db: Session, deck_id: int):
 
 def read_decks(db: Session, skip: int=0, limit: int=100):
     db_decks = db.query(models.Deck).offset(skip).limit(limit).all()
+    for deck in db_decks:
+        deck.cards_learned = 0
+        deck.cards_studying = 0
+        for card in deck.question_cards:
+            if card.question_reviews[0].easiness > 2:
+                deck.cards_learned += 1
+            else:
+                deck.cards_studying += 1
+
     return db_decks
 
 def create_deck(db: Session, deck: schemas.DeckCreate):

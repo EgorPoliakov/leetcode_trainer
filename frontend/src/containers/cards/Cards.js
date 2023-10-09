@@ -7,16 +7,16 @@ import api from '../../Api';
 function Cards() {
     const location = useLocation();
     const deckId = location.state;
-    const [deck, setDeck] = useState({question_cards: []});
+    const [deck, setDeck] = useState([]);
     const [currentCardIdx, setCurrentCardIdx] = useState(0);
 
     const fetchDeck = async () => {
-        const response = await api.get(`/decks/${deckId}`);
+        const response = await api.get(`/decks/${deckId}/study`);
         setDeck(response.data);
     };
 
     const finishCardHandler = async (quality) => {
-        const reviewId = deck.question_cards[currentCardIdx].question_reviews[0].id;
+        const reviewId = deck[currentCardIdx].question_reviews[0].id;
         const requestData = {quality: quality};
         console.log(requestData);
         const response = await api.put(`/reviews/${reviewId}`, requestData);
@@ -34,14 +34,14 @@ function Cards() {
         fetchDeck();
     }, [currentCardIdx]);
 
-    let cardElement = <Card updateCardHandler={updateCardHandler} cardData={deck.question_cards[currentCardIdx]}/>;
-    if (deck.question_cards.length == 0) {
+    let cardElement = <Card updateCardHandler={updateCardHandler} cardData={deck[currentCardIdx]}/>;
+    if (deck.length == 0) {
         cardElement = <div>
             Loading
         </div>
     }
 
-    if (currentCardIdx != 0 && currentCardIdx >= deck.question_cards.length) {
+    if (currentCardIdx != 0 && currentCardIdx >= deck.length) {
         cardElement = <div>
             Finished all cards!
             <Link to='/decks'>Home</Link>
