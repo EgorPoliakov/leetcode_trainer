@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from db import models
 from db import schemas
 from db.database import engine, SessionLocal
+from pathlib import Path
 import crud
 
 models.Base.metadata.create_all(bind=engine)
@@ -14,6 +15,35 @@ def get_db():
         yield db
     finally:
         db.close()
+
+@app.get('/test-db')
+def create_test_db(db: Session = Depends(get_db)):
+    question = schemas.QuestionCreate(
+        title='test question',
+        url='http://test_url.com',
+        difficulty='hard',
+        is_premium=False
+    )
+
+    created_question = crud.create_question(db, question)
+
+    deck = schemas.DeckCreate(
+        title='test deck',
+        difficulty='hard',
+        description='this is a test deck'
+    )
+
+    created_deck = crud.create_deck(db, deck)
+
+    card = schemas.QuestionCardCreate(
+        question_id=created_question.id, 
+        type=0,
+        deck_id=created_deck.id
+    )
+    created_card = crud.create_card(db, card)
+    
+    return created_deck
+
 
 @app.get('/')
 def root():
@@ -56,5 +86,8 @@ def create_deck(deck: schemas.DeckCreate, db: Session = Depends(get_db)):
     created_deck = crud.create_deck(db, deck)
     return created_deck
 
-
+@app.put('/reviews/{review_id}', response_model=schemas.QuestionReviewRead)
+def update_review(review_id: int, quality: int, db: Session = Depends(get_db)):
+    updated_review = crud.update_review(db, review_id, quality)
+    return updated_review
 

@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Float
 from sqlalchemy.orm import relationship, mapped_column
 from sqlalchemy.sql.functions import now
 from .database import Base
@@ -18,10 +18,12 @@ class QuestionReview(Base):
     __tablename__ = 'question_review'
 
     id = Column(Integer, primary_key=True, index=True)
-    easiness = Column(Integer, default=0)
+    easiness = Column(Float, default=0)
     interval = Column(Integer, default=0)
     repetitions = Column(Integer, default=0)
     review_date = Column(DateTime, time_zone=True, default=now())
+    first_review = Column(Boolean, default=True)
+
     question_card_id = mapped_column(ForeignKey('question_card.id'))
     question_card = relationship('QuestionCard', back_populates='question_reviews')
 

@@ -15,9 +15,10 @@ class QuestionRead(QuestionCreate):
 
 class QuestionReviewCreate(BaseModel):
     question_card_id: int
-    easiness: int
+    easiness: float
     interval: int
     repetitions: int
+    first_review: bool
     review_date: datetime
 
     class Config:

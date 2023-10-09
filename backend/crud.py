@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from db import models
 from db import schemas
+from supermemo2 import SMTwo
 
 def create_question(db: Session, question):
     db_question = models.Question(
@@ -66,4 +67,27 @@ def create_deck(db: Session, deck: schemas.DeckCreate):
     db.commit()
     db.refresh(db_deck)
     return db_deck
+
+def update_review(db: Session, review_id: int, quality: int):
+    db_review = db.query(models.QuestionReview).filter(models.QuestionReview.id == review_id).first()
+    if db_review.first_review:
+        sm2_review = SMTwo.first_review(
+            quality=quality, 
+            review_date=db_review.review_date
+        )
+        db_review.first_review = False
+    else:
+        sm2_review = SMTwo(db_review.easiness, db_review.interval, db_review.repetitions).review(
+            quality=quality,
+            review_date=db_review.review_date,
+        )
+
+    db_review.easiness = sm2_review.easiness
+    db_review.interval = sm2_review.interval
+    db_review.repetitions = sm2_review.repetitions
+    db_review.review_date = sm2_review.review_date
+
+    db.add(db_review)
+    db.commit()
+    return db_review
 
