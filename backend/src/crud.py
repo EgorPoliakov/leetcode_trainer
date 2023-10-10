@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from db import models
-from db import schemas
-from supermemo2 import SMTwo
+from src.db import models
+from src.db import schemas
+from src.supermemo2 import SMTwo
 from datetime import date
 
 def create_question(db: Session, question):

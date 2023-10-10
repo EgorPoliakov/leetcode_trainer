@@ -2,11 +2,10 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy.orm import Session
-from db import models
-from db import schemas
-from db.database import engine, SessionLocal
-from pathlib import Path
-import crud
+from src.db import models
+from src.db import schemas
+from src.db.database import engine, SessionLocal
+from src import crud
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
