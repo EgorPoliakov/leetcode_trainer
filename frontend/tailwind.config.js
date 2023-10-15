@@ -4,10 +4,18 @@ module.exports = {
   theme: {
     extend: {
       gridTemplateColumns: {
-        'layout': '1fr repeat(8, minmax(min-content, 14rem)) 1fr',
+        'layout': '1fr repeat(8, minmax(min-content, 14rem)) 1fr'
       },
       gridTemplateRows: {
         'layout': 'auto 1fr auto'
+      },
+      backgroundImage:
+      {
+        'hero': "url('/public/wave-haikei.svg')"
+      },
+      colors: {
+        'main': '#002233',
+        'second': '#0066FF'
       }
     },
   },

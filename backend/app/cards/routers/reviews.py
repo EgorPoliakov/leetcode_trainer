@@ -9,7 +9,6 @@ router = APIRouter()
 @router.get('/reviews/', response_model=list[schemas.QuestionReviewRead])
 def read_reviews(skip: int, limit: int, db: Session = Depends(get_db)):
     reviews = crud.read_reviews(db, skip, limit)
-    print(reviews[0].__dict__)
     return reviews
 
 @router.put('/reviews/{review_id}', response_model=schemas.QuestionReviewRead)

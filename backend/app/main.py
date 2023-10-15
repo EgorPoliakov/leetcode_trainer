@@ -30,29 +30,45 @@ app.include_router(reviews.router)
 @app.get('/test-db')
 def create_test_db(db: Session = Depends(get_db)):
     question = schemas.QuestionCreate(
-        title='test question',
-        url='http://test_url.com',
-        difficulty=2,
+        title='Two Sum',
+        url='https://leetcode.com/problems/two-sum',
+        difficulty=0,
+        is_premium=False
+    )
+
+    question2 = schemas.QuestionCreate(
+        title='Longest Common Prefix',
+        url='https://leetcode.com/problems/longest-common-prefix',
+        difficulty=0,
         is_premium=False
     )
 
     created_question = crud.create_question(db, question)
+    created_question2 = crud.create_question(db, question2)
+    question_id1 = created_question.id
+    question_id2 = created_question2.id
 
     deck = schemas.DeckCreate(
-        title='test deck',
-        difficulty=2,
-        description='this is a test deck'
+        title='Easy questions',
+        difficulty=0,
+        description='A deck with easy questions'
     )
 
     created_deck = crud.create_deck(db, deck)
 
-    card = schemas.QuestionCardCreate(
-        question_id=created_question.id, 
+    card1 = schemas.QuestionCardCreate(
+        question_id=question_id1, 
         type=0,
         deck_id=created_deck.id
     )
 
-    created_card = crud.create_card(db, card)
+    card2 = schemas.QuestionCardCreate(
+        question_id=question_id2,
+        type=0,
+        deck_id=created_deck.id
+    )
+    created_card = crud.create_card(db, card1)
+    created_card2 = crud.create_card(db, card2)
     
     return created_deck
 

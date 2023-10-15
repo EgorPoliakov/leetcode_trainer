@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Card } from '../../components';
 import api from '../../Api';
+import { Footer, Header } from '../../containers';
 
 function Cards() {
     const location = useLocation();
@@ -50,14 +51,16 @@ function Cards() {
     }
 
     return (
-        <div className='col-start-2 col-end-10'>
-            <h2 className='text-center justify-self-start p-5'>Deck {deckId}</h2>
-            <div className='flex h-full items-center justify-center -mt-16'>
-                {cardElement}
+        <>
+            <Header showHero={false}/>
+            <div className='col-start-2 col-end-10'>
+                <h2 className='text-center justify-self-start p-5'>Deck {deckId}</h2>
+                <div className='flex h-full items-center justify-center -mt-16'>
+                    {cardElement}
+                </div>
             </div>
-        </div>
-        
-        
+            <Footer />
+        </>
     );
 }
 

@@ -3,7 +3,7 @@ import React from 'react';
 function Footer() {
     return (
         <div className="col-span-full">
-            <footer class="bg-white dark:bg-gray-900">
+            <footer class="bg-main text-white h-full">
                 <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
                     <div class="sm:flex sm:items-center sm:justify-between">
                     </div>

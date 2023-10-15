@@ -29,7 +29,7 @@ def read_deck_for_study(db: Session, deck_id):
         db
         .query(models.QuestionCard)
         .join(models.QuestionReview)
-        .filter(models.QuestionReview.review_date == date.today())
+        .filter(models.QuestionReview.review_date <= date.today())
         .filter(models.QuestionCard.deck_id == deck_id)
     )
     
