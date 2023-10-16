@@ -72,11 +72,15 @@ def read_decks(db: Session, skip: int=0, limit: int=100):
     for deck in db_decks:
         deck.cards_learned = 0
         deck.cards_studying = 0
+        deck.cards_to_review = 0
+
         for card in deck.question_cards:
-            if card.question_reviews[0].easiness > 2:
+            if card.question_reviews[0].review_date <= date.today():
+                deck.cards_to_review += 1
+            if card.question_reviews[0].easiness > 2.5:
                 deck.cards_learned += 1
             else:
-                deck.cards_studying += 1
+                deck.cards_studying += 1  
 
     return db_decks
 

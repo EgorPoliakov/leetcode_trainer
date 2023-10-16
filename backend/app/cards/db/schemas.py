@@ -55,6 +55,7 @@ class DeckRead(DeckCreate):
     id: int
     cards_learned: int
     cards_studying: int
+    cards_to_review: int
 
 class QuestionReviewUpdate(BaseModel):
     quality: int
