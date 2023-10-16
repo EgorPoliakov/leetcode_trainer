@@ -10,7 +10,7 @@ function Card({ updateCardHandler, cardData }) {
     return (
         <div className='flex flex-col justify-between rounded-md bg-white shadow-md'>
             <div className='flex flex-col bg-gradient-to-b from-blue-500 to-blue-300 items-start rounded-t-md p-2'>
-                <a href={question.url} className='text-white mb-3'>{question.title}</a>
+                <a href={question.url} target="_blank" rel="noopener noreferrer" className='text-white mb-3'>{question.title}</a>
                 <DifficultyLabel difficulty={question.difficulty}/>
             </div>
             <div className='flex place-content-center p-2'>
