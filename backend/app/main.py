@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends
+import os
+from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy.orm import Session
@@ -8,6 +9,7 @@ from app.database import engine
 from app.cards import crud
 from app.dependencies import get_db
 from app.cards.routers import cards, decks, questions, reviews
+from app.auth.auth import auth_app
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -22,6 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount('/', auth_app)
 app.include_router(cards.router)
 app.include_router(decks.router)
 app.include_router(questions.router)
@@ -71,10 +74,4 @@ def create_test_db(db: Session = Depends(get_db)):
     created_card2 = crud.create_card(db, card2)
     
     return created_deck
-
-
-@app.get('/')
-def root():
-    return {'message': 'hello world!'}
-
 
