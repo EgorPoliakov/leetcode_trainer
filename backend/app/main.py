@@ -7,14 +7,14 @@ from app.cards.db import models
 from app.cards.db import schemas
 from app.database import engine
 from app.cards import crud
-from app.dependencies import get_db
+from app.dependencies import get_db, get_current_user
 from app.cards.routers import cards, decks, questions, reviews
 from app.auth.auth import auth_app
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-origins = ["http://localhost:3000"]
+origins = ["http://localhost", "http://localhost:3000", "http://127.0.0.1:3000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,11 +24,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+SECRET_KEY = os.environ['SECRET_KEY']
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 app.mount('/auth', auth_app)
 app.include_router(cards.router)
-app.include_router(decks.router)
+app.include_router(decks.router, dependencies=[Depends(get_current_user)])
 app.include_router(questions.router)
 app.include_router(reviews.router)
 

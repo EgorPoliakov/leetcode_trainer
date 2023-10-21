@@ -7,7 +7,7 @@ function Decks() {
     const [decks, setDecks] = useState([]);
 
     const fetchDecks = async () => {
-        const response = await api.get('/decks?skip=0&limit=2');
+        const response = await api.get('http://localhost:8000/decks?skip=0&limit=2', {withCredentials: true});
         setDecks(response.data);
     }
 

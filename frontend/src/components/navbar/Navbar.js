@@ -3,14 +3,29 @@ import { Link } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import api from '../../Api';
 
-function Navbar({showHero}) {
+function Navbar({showHero, user, setUserHandler}) {
     let navClass = null;
     if (!showHero) {
+        console.log(showHero);
+
         navClass = 'bg-main';
+    }
+
+    let userElement = <div class="rounded-xl m-5">
+    <button onClick={() => login()} class="px-4 py-2 rounded-l-xl text-white m-0 bg-main hover:bg-main-hover transition">Login</button>
+    <button class="px-4 py-2 rounded-r-xl bg-neutral-50 hover:bg-neutral-200 transition">Register</button>
+</div>;
+    if (user) {
+        userElement = <div>{user.email}</div>
+    } else {
+
     }
 
     const backendGoogleLogin = async (code) => {
         const response = await api.post('http://localhost:8000/auth/login', {code: code});
+        const user = response.data.user;
+        localStorage.setItem('user', JSON.stringify(user));
+        setUserHandler();
         console.log(response.data);
     }
 
@@ -52,10 +67,7 @@ function Navbar({showHero}) {
                     </li>
                 </ul>
                 <div class='flex items-center justify-center'>
-                    <div class="rounded-xl m-5">
-                        <button onClick={() => login()} class="px-4 py-2 rounded-l-xl text-white m-0 bg-main hover:bg-main-hover transition">Login</button>
-                        <button class="px-4 py-2 rounded-r-xl bg-neutral-50 hover:bg-neutral-200 transition">Register</button>
-                    </div>
+                    {userElement}
                 </div>
             </div>
         </nav>
