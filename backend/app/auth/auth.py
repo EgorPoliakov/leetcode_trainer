@@ -1,41 +1,51 @@
 import os
-from fastapi import FastAPI, Request
-from fastapi.responses import RedirectResponse
-from starlette.middleware.sessions import SessionMiddleware
-from authlib.integrations.starlette_client import OAuthError
-from app.dependencies import get_oauth
+from urllib.parse import urlencode
+import httpx
+from fastapi import FastAPI
+from app.auth.schemas import GoogleAuthRequest
 
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID') or None
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET') or None
 
 auth_app = FastAPI()
 
-SECRET_KEY = os.environ.get('SECRET_KEY') or None
-if SECRET_KEY is None:
-    raise 'Missing SECRET_KEY'
+@auth_app.post('/login')
+async def login(request: GoogleAuthRequest):
+    target_url = "https://oauth2.googleapis.com/token"
 
-auth_app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
+    # Prepare headers if needed
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        # Add any other headers as needed
+    }
 
-@auth_app.get('/login')
-async def login(request: Request):
-    oauth = get_oauth()
-    redirect_uri = request.url_for('auth')  # This creates the url for the /auth endpoint
-    return await oauth.google.authorize_redirect(request, redirect_uri)
+    data = {
+        'code': request.code,
+        'client_id': GOOGLE_CLIENT_ID,
+        'client_secret': GOOGLE_CLIENT_SECRET,
+        'redirect_uri': 'http://localhost:3000',
+        'grant_type': 'authorization_code',
+    }
 
-@auth_app.get('/auth')
-async def auth(request: Request):
-    oauth = get_oauth()
-    try:
-        access_token = await oauth.google.authorize_access_token(request)
-    except OAuthError:
-        return RedirectResponse(url='/')
-
-    request.session['user'] = dict(access_token['userinfo'])
-    return RedirectResponse(url='/')
-
-@auth_app.get('/')
-def root(request: Request):
-    user = request.session.get('user')
-    if user:
-        name = user['name']
-        return {'message': f'hello {name}'}
+    encoded_data = urlencode(data)
+    print(encoded_data)
+    # Make the POST request using httpx
+    async with httpx.AsyncClient() as client:
+        response = await client.post(target_url, data=encoded_data, headers=headers)
+    if response.status_code != 200:
+        return {"message": "POST request failed", "response_status_code": response.text}
     
-    return {'message': 'hello world!'}
+    response_data = response.json()
+    access_token = response_data['access_token']
+    userinfo_url = f'https://www.googleapis.com/oauth2/v1/userinfo?access_token={access_token}'
+    
+    async with httpx.AsyncClient() as client:
+        response = await client.get(userinfo_url)
+    
+    if response.status_code != 200:
+        return {"message": "GET request failed", "response_status_code": response.text}
+    
+    print(response.json())
+    return {"message": "POST request successful", "response_content": response.text}
+
+        

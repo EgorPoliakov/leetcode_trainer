@@ -1,11 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
+import api from '../../Api';
 
 function Navbar({showHero}) {
     let navClass = null;
     if (!showHero) {
         navClass = 'bg-main';
     }
+
+    const backendGoogleLogin = async (code) => {
+        const response = await api.post('http://localhost:8000/auth/login', {code: code});
+        console.log(response.data);
+    }
+
+    const login = useGoogleLogin({
+        onSuccess: codeResponse => backendGoogleLogin(codeResponse.code),
+        flow: 'auth-code',
+    });
+      
+
     return (
         <nav className={`px-24 ${navClass}`}>
             <button data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 text-gray-400 hover:bg-gray-700 focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
@@ -39,7 +53,7 @@ function Navbar({showHero}) {
                 </ul>
                 <div class='flex items-center justify-center'>
                     <div class="rounded-xl m-5">
-                        <button class="px-4 py-2 rounded-l-xl text-white m-0 bg-main hover:bg-main-hover transition">Login</button>
+                        <button onClick={() => login()} class="px-4 py-2 rounded-l-xl text-white m-0 bg-main hover:bg-main-hover transition">Login</button>
                         <button class="px-4 py-2 rounded-r-xl bg-neutral-50 hover:bg-neutral-200 transition">Register</button>
                     </div>
                 </div>

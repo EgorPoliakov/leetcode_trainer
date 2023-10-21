@@ -1,4 +1,5 @@
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Home, Decks, Cards } from './pages';
 import './App.css'
 import Layout from './Layout';
@@ -14,7 +15,9 @@ const router = createBrowserRouter(
 
 function App() {
   return (
-    <RouterProvider router={router}/>
+    <GoogleOAuthProvider clientId='406378347404-c1t9om3k24eol4evt1klfaf54vdhqp2n.apps.googleusercontent.com'>
+      <RouterProvider router={router}/>
+    </GoogleOAuthProvider>
   );
 }
 
