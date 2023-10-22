@@ -28,7 +28,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 app.mount('/auth', auth_app)
-app.mount('/', cards_app)
+app.mount('/cards', cards_app)
 
 @app.get('/test-db')
 def create_test_db(db: Session = Depends(get_db)):
