@@ -15,10 +15,9 @@ function Navbar({showHero, user, setUserHandler}) {
     <button onClick={() => login()} class="px-4 py-2 rounded-l-xl text-white m-0 bg-main hover:bg-main-hover transition">Login</button>
     <button class="px-4 py-2 rounded-r-xl bg-neutral-50 hover:bg-neutral-200 transition">Register</button>
 </div>;
-    if (user) {
-        userElement = <div>{user.email}</div>
-    } else {
 
+    if ('email' in user) {
+        userElement = <div>{user.email}</div>
     }
 
     const backendGoogleLogin = async (code) => {
