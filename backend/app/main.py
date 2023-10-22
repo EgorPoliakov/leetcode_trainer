@@ -3,12 +3,12 @@ from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
-from app.cards.db import models
-from app.cards.db import schemas
+from app.cards import models
+from app.cards import schemas
 from app.database import engine
 from app.cards import crud
 from app.dependencies import get_db, get_current_user
-from app.cards.routers import cards, decks, questions, reviews
+from app.cards.cards import cards_app
 from app.auth.auth import auth_app
 
 models.Base.metadata.create_all(bind=engine)
@@ -28,10 +28,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 app.mount('/auth', auth_app)
-app.include_router(cards.router)
-app.include_router(decks.router, dependencies=[Depends(get_current_user)])
-app.include_router(questions.router)
-app.include_router(reviews.router)
+app.mount('/', cards_app)
 
 @app.get('/test-db')
 def create_test_db(db: Session = Depends(get_db)):

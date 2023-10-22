@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.cards.db import models
-from app.cards.db import schemas
+from app.cards import models
+from app.cards import schemas
 from app.supermemo2 import SMTwo
 from datetime import date
 

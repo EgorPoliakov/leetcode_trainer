@@ -2,8 +2,7 @@ import os
 from urllib.parse import urlencode
 import httpx
 from fastapi import FastAPI
-from fastapi import Request, Response
-from app.auth.schemas import GoogleAuthRequest
+from fastapi import Request
 from starlette.responses import JSONResponse
 
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID') or None
