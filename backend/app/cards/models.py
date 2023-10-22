@@ -27,6 +27,8 @@ class QuestionReview(Base):
     question_card_id = mapped_column(ForeignKey('question_card.id'))
     question_card = relationship('QuestionCard', back_populates='question_reviews')
 
+    user_id = Column(Integer)
+
 class QuestionCard(Base):
     __tablename__ = 'question_card'
 

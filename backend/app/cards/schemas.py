@@ -20,7 +20,7 @@ class QuestionReviewCreate(BaseModel):
     repetitions: int
     first_review: bool
     review_date: datetime
-
+    user_id: int
     class Config:
         from_attributes = True
 

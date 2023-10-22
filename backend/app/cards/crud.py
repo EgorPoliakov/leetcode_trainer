@@ -39,10 +39,14 @@ def read_reviews(db: Session, skip: int=0, limit: int=10):
     reviews = db.query(models.QuestionReview).offset(skip).limit(limit).all()
     return reviews
 
-def create_question_review(db: Session, db_card: schemas.QuestionCardRead):
-    print('card id:', db_card.id)
+def read_user_reviews(db: Session, user_id: int):
+    user_reviews = db.query(models.QuestionReview).filter(models.QuestionReview.user_id == user_id).all()
+    return user_reviews
+
+def create_review(db: Session, review: schemas.QuestionReviewCreate):
     db_question_review = models.QuestionReview(
-        question_card_id=db_card.id
+        question_card_id=review.question_card_id,
+        user_id=review.user_id
     )
     
     db.add(db_question_review)
