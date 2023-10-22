@@ -1,6 +1,8 @@
+from sqlalchemy import or_, and_
 from sqlalchemy.orm import Session
 from app.cards import models
 from app.cards import schemas
+from app.auth.schemas import GoogleUser
 from app.supermemo2 import SMTwo
 from datetime import date
 
@@ -24,29 +26,38 @@ def read_cards(db: Session, skip: int=0, limit: int=10):
     cards = db.query(models.QuestionCard).offset(skip).limit(limit).all()
     return cards
 
-def read_deck_for_study(db: Session, deck_id):
+def read_deck_for_study(db: Session, deck_id: int, user_id: str):
     cards = (
         db
         .query(models.QuestionCard)
-        .join(models.QuestionReview)
-        .filter(models.QuestionReview.review_date <= date.today())
         .filter(models.QuestionCard.deck_id == deck_id)
+        .outerjoin(models.QuestionReview)
+        .filter(or_(models.QuestionReview.id.is_(None), and_(models.QuestionReview.user_id == user_id, models.QuestionReview.review_date <= date.today())))
+        .all()
     )
-    
     return cards
 
 def read_reviews(db: Session, skip: int=0, limit: int=10):
     reviews = db.query(models.QuestionReview).offset(skip).limit(limit).all()
     return reviews
 
-def read_user_reviews(db: Session, user_id: int):
+def read_user_reviews(db: Session, user_id: str):
     user_reviews = db.query(models.QuestionReview).filter(models.QuestionReview.user_id == user_id).all()
     return user_reviews
 
 def create_review(db: Session, review: schemas.QuestionReviewCreate):
+    sm2_review = SMTwo.first_review(
+        quality=review.quality, 
+        review_date=date.today()
+    )
+
     db_question_review = models.QuestionReview(
         question_card_id=review.question_card_id,
-        user_id=review.user_id
+        user_id=review.user_id,
+        easiness = sm2_review.easiness,
+        interval = sm2_review.interval,
+        repetitions = sm2_review.repetitions,
+        review_date = sm2_review.review_date
     )
     
     db.add(db_question_review)
@@ -63,7 +74,6 @@ def create_card(db: Session, question: schemas.QuestionCardCreate):
     db.add(db_card)
     db.commit()
 
-    db_question_review = create_question_review(db, db_card)
     db.refresh(db_card)
     return db_card
 
@@ -71,17 +81,28 @@ def read_deck(db: Session, deck_id: int):
     db_deck = db.query(models.Deck).filter(models.Deck.id == deck_id).first()
     return db_deck
 
-def read_decks(db: Session, skip: int=0, limit: int=100):
+def read_decks(db: Session, user: GoogleUser, skip: int=0, limit: int=100):
     db_decks = db.query(models.Deck).offset(skip).limit(limit).all()
+
     for deck in db_decks:
         deck.cards_learned = 0
         deck.cards_studying = 0
         deck.cards_to_review = 0
+        deck.cards_new = 0
 
         for card in deck.question_cards:
-            if card.question_reviews[0].review_date <= date.today():
+            user_review = None
+            for review in card.question_reviews:
+                if (review.user_id == user.id):
+                    user_review = review
+                    break
+
+            if user_review is None:
+                deck.cards_new += 1
                 deck.cards_to_review += 1
-            if card.question_reviews[0].easiness > 2.5:
+            elif user_review.review_date <= date.today():
+                deck.cards_to_review += 1
+            elif user_review.easiness > 2.5:
                 deck.cards_learned += 1
             else:
                 deck.cards_studying += 1  
@@ -102,17 +123,11 @@ def create_deck(db: Session, deck: schemas.DeckCreate):
 
 def update_review(db: Session, review_id: int, quality: int):
     db_review = db.query(models.QuestionReview).filter(models.QuestionReview.id == review_id).first()
-    if db_review.first_review:
-        sm2_review = SMTwo.first_review(
-            quality=quality, 
-            review_date=db_review.review_date
-        )
-        db_review.first_review = False
-    else:
-        sm2_review = SMTwo(db_review.easiness, db_review.interval, db_review.repetitions).review(
-            quality=quality,
-            review_date=db_review.review_date,
-        )
+    
+    sm2_review = SMTwo(db_review.easiness, db_review.interval, db_review.repetitions).review(
+        quality=quality,
+        review_date=db_review.review_date,
+    )
 
     db_review.easiness = sm2_review.easiness
     db_review.interval = sm2_review.interval

@@ -18,16 +18,15 @@ class QuestionReview(Base):
     __tablename__ = 'question_review'
 
     id = Column(Integer, primary_key=True, index=True)
-    easiness = Column(Float, default=0)
-    interval = Column(Integer, default=0)
-    repetitions = Column(Integer, default=0)
-    review_date = Column(Date, time_zone=True, default=date.today())
-    first_review = Column(Boolean, default=True)
+    easiness = Column(Float)
+    interval = Column(Integer)
+    repetitions = Column(Integer)
+    review_date = Column(Date, time_zone=True)
 
     question_card_id = mapped_column(ForeignKey('question_card.id'))
     question_card = relationship('QuestionCard', back_populates='question_reviews')
 
-    user_id = Column(Integer)
+    user_id = Column(String)
 
 class QuestionCard(Base):
     __tablename__ = 'question_card'

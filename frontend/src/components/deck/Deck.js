@@ -12,7 +12,6 @@ function Deck({deckData}) {
     const cardsToReview = deckData.cards_to_review;
     const cardsOverall = cardsLearned + cardsStudying;
     const percent = 100 * cardsLearned / cardsOverall;
-    console.log(percent);
     return (
         <div className='flex flex-col justify-between rounded-md bg-white shadow-md'>
             <div className='flex flex-col bg-gradient-to-b from-blue-500 to-blue-300 items-start rounded-t-md p-2'>

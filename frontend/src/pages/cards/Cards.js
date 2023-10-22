@@ -5,6 +5,7 @@ import { CircularProgressbar, CircularProgressbarWithChildren } from 'react-circ
 import { Card } from '../../components';
 import api from '../../Api';
 import { Footer, Header } from '../../containers';
+import constants from '../../constants';
 
 function Cards() {
     const location = useLocation();
@@ -20,15 +21,35 @@ function Cards() {
     const percentFinishedStudying = 100 * cardsFinishedStudying / deckData.cards_studying;
 
     const fetchDeck = async () => {
-        const response = await api.get(`/decks/${deckData.id}/study`);
+        const endpoints = constants.endpoints;
+        const url = `${endpoints.domain}/${endpoints.prefixes.cards}/decks/${deckData.id}/study`
+        const response = await api.get(url);
         setDeck(response.data);
         setLoading(false);
     };
 
     const finishCardHandler = async (quality) => {
+        const currentCard = deck[currentCardIdx];
+        const endpoints = constants.endpoints;
+        
+        if (currentCard.question_reviews.length == 0) {
+            const userData = JSON.parse(localStorage.getItem('user'));
+            const requestData = {
+                question_card_id: currentCard.id,
+                user_id: userData.id,
+                quality: quality
+            }
+            const url = `${endpoints.domain}/${endpoints.prefixes.cards}/reviews`;
+            const response = await api.post(url, requestData);
+            return;
+        }
+
         const reviewId = deck[currentCardIdx].question_reviews[0].id;
+        const url = `${endpoints.domain}/${endpoints.prefixes.cards}/reviews/${reviewId}`;
+
         const requestData = {quality: quality};
-        const response = await api.put(`/reviews/${reviewId}`, requestData);
+
+        const response = await api.put(url, requestData);
     }
 
     const updateCardHandler = (quality) => {

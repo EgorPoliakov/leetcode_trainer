@@ -6,7 +6,7 @@ function Card({ updateCardHandler, cardData }) {
 
     const again_quality = 0;
     const good_quality = 3;
-    const easy_quality = 4;
+    const easy_quality = 5;
     return (
         <div className='flex flex-col justify-between rounded-md bg-white shadow-md'>
             <div className='flex flex-col bg-gradient-to-b from-blue-500 to-blue-300 items-start rounded-t-md p-2'>

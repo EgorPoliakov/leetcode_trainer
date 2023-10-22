@@ -60,6 +60,7 @@ class SMTwo:
             self.repetitions = self.repetitions + 1
 
         self.easiness += 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)
+        print(quality, self.easiness)
         if self.easiness < 1.3:
             self.easiness = 1.3
 

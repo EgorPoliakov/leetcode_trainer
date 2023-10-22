@@ -1,5 +1,6 @@
 import os
 from app.database import SessionLocal
+from app.auth.schemas import GoogleUser
 from fastapi.security import APIKeyCookie
 from fastapi import Request, HTTPException
 import itsdangerous
@@ -19,6 +20,6 @@ def get_current_user(request: Request):
     user = request.session.get('user')
     if user is None:
         raise HTTPException(status_code=401, detail='Not authenticated')
-    
-    return user
+    user['id'] = str(user['id'])
+    return GoogleUser(**user)
 

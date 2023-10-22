@@ -1,7 +1,8 @@
 import React from 'react';
-import difficultyMapping from '../../constants';
+import constants from '../../constants';
 
 function DifficultyLabel({difficulty}) {
+    const difficultyMapping = constants.difficultyMapping;
     const difficultyColor = difficultyMapping[difficulty].color; 
     const difficultyText = difficultyMapping[difficulty].text;
     

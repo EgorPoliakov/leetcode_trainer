@@ -13,19 +13,23 @@ class QuestionCreate(BaseModel):
 class QuestionRead(QuestionCreate):
     id: int
 
-class QuestionReviewCreate(BaseModel):
+class QuestionReviewBase(BaseModel):
     question_card_id: int
-    easiness: float
-    interval: int
-    repetitions: int
-    first_review: bool
-    review_date: datetime
-    user_id: int
+    user_id: str
     class Config:
         from_attributes = True
 
-class QuestionReviewRead(QuestionReviewCreate):
+class QuestionReviewCreate(QuestionReviewBase):
+    question_card_id: int
+    user_id: str
+    quality: int
+
+class QuestionReviewRead(QuestionReviewBase):
     id: int
+    easiness: float
+    interval: int
+    repetitions: int
+    review_date: datetime
 
 class QuestionCardCreate(BaseModel):
     question_id: int
