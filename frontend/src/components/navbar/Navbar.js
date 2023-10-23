@@ -1,9 +1,29 @@
-import React from 'react';
+import { useState } from "react";
 import { Link } from 'react-router-dom';
-import { useGoogleLogin } from '@react-oauth/google';
-import api from '../../Api';
+import { ProfileMenu } from '../../components';
 
-function Navbar({showHero, user, setUserHandler}) {
+export const navLinks = [
+    {
+        link: '/decks',
+        title: 'Decks',
+    },
+    {
+        link: '/decks',
+        title: 'Features',
+    },
+    {
+        link: '/decks',
+        title: 'Product',
+    },
+    {
+        link: '/decks',
+        title: 'Clients',
+    },
+];
+
+const Navbar = ({showHero, user, loginHandler, logoutHandler}) => {
+    const [active, setActive] = useState("Home");
+    const [toggle, setToggle] = useState(false);
     let navClass = null;
     if (!showHero) {
         console.log(showHero);
@@ -11,66 +31,78 @@ function Navbar({showHero, user, setUserHandler}) {
         navClass = 'bg-main';
     }
 
-    let userElement = <div class="rounded-xl m-5">
-    <button onClick={() => login()} class="px-4 py-2 rounded-l-xl text-white m-0 bg-main hover:bg-main-hover transition">Login</button>
-    <button class="px-4 py-2 rounded-r-xl bg-neutral-50 hover:bg-neutral-200 transition">Register</button>
-</div>;
+    let userElement = null;
+    let userElementMobile = null;
 
     if ('email' in user) {
-        userElement = <div>{user.email}</div>
+        userElement = <ProfileMenu logoutHandler={logoutHandler} user={user} className={"sm:flex hidden items-center gap-4"}/>
+        userElementMobile = <ProfileMenu logoutHandler={logoutHandler} user={user} className={"flex items-center gap-4"}/>
+    } else {
+        userElement = <div class="rounded-xl m-5">
+        <button onClick={() => loginHandler()} class="px-4 py-2 rounded-l-xl text-white m-0 bg-main hover:bg-main-hover transition">Login</button>
+        <button class="px-4 py-2 rounded-r-xl bg-neutral-50 hover:bg-neutral-200 transition">Register</button>
+    </div>;
     }
 
-    const backendGoogleLogin = async (code) => {
-        const response = await api.post('http://localhost:8000/auth/login', {code: code});
-        const user = response.data.user;
-        localStorage.setItem('user', JSON.stringify(user));
-        setUserHandler();
-        console.log(response.data);
-    }
+    
 
-    const login = useGoogleLogin({
-        onSuccess: codeResponse => backendGoogleLogin(codeResponse.code),
-        flow: 'auth-code',
-    });
-      
+  return (
+    <nav className={`${navClass} w-full flex justify-between items-center navbar px-24 h-[8vh]`}>
+      {/* Logo */}
+        <Link to="/" className="mr-16">
+            <span className="text-2xl font-semibold whitespace-nowrap text-white">LeetCoach</span>
+        </Link>
+        
+        {/* Desktop Navigation */}
+        <ul className="list-none sm:flex hidden items-center flex-1">
+        {navLinks.map((item, index) => (
+            <li
+            key={item.title}
+            className={`text-white hover:text-gray-300 cursor-pointer text-[16px] ${
+                active === item.title ? "text-white" : "text-dimWhite"
+            } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`} text-white
+            onClick={() => setActive(item.title)}
+            >
+            <Link to={item.link}>{item.title}</Link>
+            </li>
+        ))}
+        </ul>
+        {userElement}
+          
 
-    return (
-        <nav className={`px-24 ${navClass}`}>
-            <button data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 text-gray-400 hover:bg-gray-700 focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
-                <span className="sr-only">Open main menu</span>
-                <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-                </svg>
-            </button>
-            <div className="hidden w-full md:flex md:w-auto justify-between items-center" id="navbar-default">
-                <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border md:flex-row items-center md:space-x-8 md:mt-0 md:border-0">
-                    <li>
-                    <Link to="/" className="mr-8">
-                        <span className="text-2xl font-semibold whitespace-nowrap text-white">LeetCoach</span>
-                    </Link>
-                    </li>
-                    <li>
-                    <Link to='/decks' activeClassName='' className="py-2 pl-3 pr-4 md:bg-transparent md:p-0 md:hover:text-gray-300 text-white" aria-current="page">Decks</Link>
-                    </li>
-                    <li>
-                    <a href="#" className="block py-2 pl-3 pr-4 rounded md:hover:text-gray-300 md:p-0 text-white">About</a>
-                    </li>
-                    <li>
-                    <a href="#" className="block py-2 pl-3 pr-4 rounded md:hover:text-gray-300 md:p-0 text-white">Services</a>
-                    </li>
-                    <li>
-                    <a href="#" className="block py-2 pl-3 pr-4 rounded md:hover:text-gray-300 md:p-0 text-white">Pricing</a>
-                    </li>
-                    <li>
-                    <a href="#" className="block py-2 pl-3 pr-4 rounded md:hover:text-gray-300 md:p-0 text-white">Contact</a>
-                    </li>
-                </ul>
-                <div class='flex items-center justify-center'>
-                    {userElement}
-                </div>
-            </div>
-        </nav>
-    );
-}
+      {/* Mobile Navigation */}
+      <div className="sm:hidden flex flex-1 justify-end items-center">
+        <img
+          src={""}
+          alt="menu"
+          className="w-[28px] h-[28px] object-contain"
+          onClick={() => setToggle(!toggle)}
+        />
+
+        {/* Sidebar */}
+        <div
+          className={`${
+            !toggle ? "hidden" : "flex"
+          } flex-col p-6 bg-black-gradient absolute top-20 right-0 mx-4 my-2 min-w-[140px] rounded-xl sidebar`}
+        >
+          <ul className="list-none flex justify-end items-start flex-1 flex-col">
+            {navLinks.map((nav, index) => (
+              <li
+                key={nav.id}
+                className={`font-poppins font-medium cursor-pointer text-[16px] ${
+                  active === nav.title ? "text-white" : "text-dimWhite"
+                } ${index === navLinks.length - 1 ? "mb-0" : "mb-4"}`}
+                onClick={() => setActive(nav.title)}
+              >
+                <a href={`#${nav.id}`}>{nav.title}</a>
+              </li>
+            ))}
+          </ul>
+          {userElementMobile}
+        </div>
+      </div>
+    </nav>
+  );
+};
 
 export default Navbar;

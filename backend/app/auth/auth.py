@@ -49,4 +49,7 @@ async def login(request: Request):
     request.session['user'] = response.json()
     return JSONResponse(content={"user": response.json()})
 
-        
+@auth_app.get('/logout')
+def logout(request: Request):
+    request.session.pop('user');
+    return {'message': 'logged out successfuly'}

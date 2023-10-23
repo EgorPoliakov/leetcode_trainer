@@ -1,10 +1,11 @@
 import { Outlet } from 'react-router-dom';
-import { Header, Footer } from './containers';
+import { useState } from 'react';
 
 function Layout() {
+    const [message, setMessage] = useState();
     return (
         <div className='grid grid-rows-layout grid-cols-layout min-h-full'>
-            <Outlet />
+            <Outlet context={[message, setMessage]}/>
         </div>
     );
 }
