@@ -11,11 +11,11 @@ function ProfileMenu({logoutHandler, user, className}) {
     return (
       <Menu>
         <MenuHandler>
-            <div className={className}>
+            <div className={`cursor-pointer ${className}`}>
                 <Avatar
                 variant="circular"
                 alt="User avatar"
-                className="cursor-pointer rounded-full w-14 h-14"
+                className="cursor-pointer rounded-full w-12 h-12"
                 src={user.picture}
                 />
                 <div>
@@ -23,7 +23,7 @@ function ProfileMenu({logoutHandler, user, className}) {
                 </div>
             </div>
         </MenuHandler>
-        <MenuList className="min-w-[180px] p-3">
+        <MenuList className="min-w-[180px] p-3 bg-third text-white border-none">
           <MenuItem className="flex items-center gap-2">
             <svg
               width="16"

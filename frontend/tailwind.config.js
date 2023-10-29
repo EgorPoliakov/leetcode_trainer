@@ -14,9 +14,10 @@ module.exports = {
         'hero': "url('/public/wave-haikei.svg')"
       },
       colors: {
-        'main': '#002233',
+        'main': '#1E1D2F',
         'main-hover': '#00334D',
-        'second': '#0066FF'
+        'second': '#8F5AFF',
+        'third': '#2D2B43'
       }
     },
   },

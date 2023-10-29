@@ -92,7 +92,7 @@ function Cards() {
                 completed={(percentFinishedLearned + percentFinishedStudying + percentFinishedToReview)} 
                 width='100%' 
                 height='10px'
-                bgColor='#0066FF'
+                bgColor='#8F5AFF'
                 isLabelVisible={false}/>
             </div>
             {/* <div className='w-16'>
