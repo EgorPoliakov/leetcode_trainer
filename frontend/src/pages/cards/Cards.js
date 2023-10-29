@@ -53,7 +53,7 @@ function Cards() {
     }
 
     const updateCardHandler = (quality) => {
-        finishCardHandler(quality);
+        // finishCardHandler(quality);
         const cardEasiness = deck[currentCardIdx].easiness;
         if (cardEasiness > 2.5) {
             setCardsFinishedLearned((prevCardFinishedLearned) => prevCardFinishedLearned + 1);
