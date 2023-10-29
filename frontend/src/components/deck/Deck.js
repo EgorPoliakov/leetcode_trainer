@@ -10,7 +10,7 @@ function Deck({deckData}) {
     const cardsLearned = deckData.cards_learned;
     const cardsStudying = deckData.cards_studying;
     const cardsToReview = deckData.cards_to_review;
-    const cardsOverall = cardsLearned + cardsStudying;
+    const cardsOverall = cardsLearned + cardsStudying + cardsToReview;
     const percent = 100 * cardsLearned / cardsOverall;
     return (
         <div className='flex flex-col justify-between rounded-md bg-white shadow-md'>

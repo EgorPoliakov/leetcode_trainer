@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { CircularProgressbar, CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import ProgressBar from "@ramonak/react-progress-bar";
 import { Card } from '../../components';
 import api from '../../Api';
 import { Footer, Header } from '../../containers';
@@ -13,12 +13,14 @@ function Cards() {
     const [loading, setLoading] = useState(true);
     const [cardsFinishedLearned, setCardsFinishedLearned] = useState(0);
     const [cardsFinishedStudying, setCardsFinishedStudying] = useState(0);
+    const [cardsFinishedToReview, setCardsFinishedToReview] = useState(0);
 
     const [deck, setDeck] = useState([]);
     const [currentCardIdx, setCurrentCardIdx] = useState(0);
 
-    const percentFinishedLearned = 100 * cardsFinishedLearned / deckData.cards_learned;
-    const percentFinishedStudying = 100 * cardsFinishedStudying / deckData.cards_studying;
+    const percentFinishedLearned = deckData.cards_learned != 0 ? 100 * cardsFinishedLearned / deckData.cards_learned : 0;
+    const percentFinishedStudying = deckData.cards_studying != 0 ? 100 * cardsFinishedStudying / deckData.cards_studying : 0;
+    const percentFinishedToReview = deckData.cards_to_review != 0 ? 100 * cardsFinishedToReview / deckData.cards_to_review : 0;
 
     const fetchDeck = async () => {
         const endpoints = constants.endpoints;
@@ -55,7 +57,9 @@ function Cards() {
     const updateCardHandler = (quality) => {
         // finishCardHandler(quality);
         const cardEasiness = deck[currentCardIdx].easiness;
-        if (cardEasiness > 2.5) {
+        if (deck[currentCardIdx].question_reviews.length === 0) {
+            setCardsFinishedToReview((prevCardFinishedToReview) => prevCardFinishedToReview + 1);
+        } else if (cardEasiness > 2.5) {
             setCardsFinishedLearned((prevCardFinishedLearned) => prevCardFinishedLearned + 1);
         } else {
             setCardsFinishedStudying((prevCardFinishedStudying) => prevCardFinishedStudying + 1);
@@ -83,8 +87,15 @@ function Cards() {
 
     if (deck.length !== 0) {
         cardElement = <Card updateCardHandler={updateCardHandler} cardData={deck[currentCardIdx]}/>;
-        progressElement = <div className='flex w-64 justify-evenly mt-5'>
-            <div className='w-16'>
+            progressElement = <div className='w-96 mt-5'>
+                <ProgressBar 
+                completed={(percentFinishedLearned + percentFinishedStudying + percentFinishedToReview)} 
+                width='100%' 
+                height='10px'
+                bgColor='#0066FF'
+                isLabelVisible={false}/>
+            </div>
+            {/* <div className='w-16'>
                 <CircularProgressbarWithChildren value={percentFinishedStudying}>
                     Studying
                 </CircularProgressbarWithChildren>
@@ -93,23 +104,15 @@ function Cards() {
                 <CircularProgressbarWithChildren value={percentFinishedLearned}>
                     Learned
                 </CircularProgressbarWithChildren>
-            </div>
-        </div>
+            </div> */}
+        
     }
+    console.log(percentFinishedLearned)
 
     if (deck.length !== 0 && currentCardIdx >= deck.length) {
-        
         cardElement = <div className='text-white'>
             Finished all cards!
             <Link to='/decks'>Home</Link>
-        </div>
-        progressElement = <div className='flex w-64 justify-evenly mt-5'>
-            <div className='w-16'>
-                <CircularProgressbar value={percentFinishedStudying} />
-            </div>
-            <div className='w-16'>
-                <CircularProgressbar value={percentFinishedLearned} />
-            </div>
         </div>
     }
 
