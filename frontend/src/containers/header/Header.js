@@ -50,7 +50,7 @@ function Header({ showHero }) {
         setUserHandler();
     }, []);
 
-    let headerHeight = 'h-[84vh]';
+    let headerHeight = 'h-[100vh]';
     const navElement = <Navbar 
     showHero={showHero} 
     user={user} 

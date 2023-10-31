@@ -1,6 +1,6 @@
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { Home, Decks, Cards } from './pages';
+import { Home, Decks, Cards, About } from './pages';
 import './App.css'
 import Layout from './Layout';
 const router = createBrowserRouter(
@@ -9,6 +9,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path='/decks' element={<Decks />} />
       <Route path='/study' element={<Cards />} />
+      <Route path='/about' element={<About />} />
     </Route>
   )
 );
