@@ -13,7 +13,7 @@ function Deck({deckData}) {
     const cardsOverall = cardsLearned + cardsStudying + cardsToReview;
     const percent = 100 * cardsLearned / cardsOverall;
     return (
-        <div className='flex flex-col justify-between rounded-md bg-third shadow-md hover:drop-shadow-lg transition duration-300 hover:-translate-y-1'>
+        <div className='group flex flex-col justify-between rounded-md bg-third shadow-md hover:drop-shadow-lg transition duration-300 hover:-translate-y-1'>
             <div className='flex flex-col bg-second items-start rounded-t-md p-2'>
                 <p className='text-white text-xl font-semibold mb-3'>{deckData.title}</p>
                 <DifficultyLabel difficulty={deckData.difficulty}/>
@@ -29,12 +29,12 @@ function Deck({deckData}) {
                 </div>
                 <div className='flex flex-col text-center text-white'>
                     <div className='text-xl font-bold'>{cardsToReview}</div>
-                    <div className='text-gray-400'>Review</div>
+                    <div className='text-gray-400'>New</div>
                 </div>
                 <div className='w-16'>
                     <CircularProgressbarWithChildren value={percent}>
                         <Link to='/study' state={deckData} className="absolute text-xl text-second">
-                            <FontAwesomeIcon icon={faPlay} s/>
+                            <FontAwesomeIcon icon={faPlay} />
                         </Link>
                     </CircularProgressbarWithChildren>
                 </div>

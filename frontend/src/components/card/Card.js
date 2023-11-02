@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import { useSpring, animated } from 'react-spring';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
+import { faThumbsUp, faThumbsDown, faLightbulb, faBookOpen, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 
 import DifficultyLabel from '../difficulty_label/DifficultyLabel';
 
 function Card({ updateCardHandler, cardData }) {
+    console.log(cardData)
     const question = cardData.question;
+    const questionReview = cardData.question_reviews;
     const buttonClick = (quality, animationDirection) => {
         api.start({
             from: {opacity: 1, x: 0},
@@ -16,6 +18,15 @@ function Card({ updateCardHandler, cardData }) {
             },
         });
     };
+
+    let progressIcon = null;
+    if (questionReview.length === 0) {
+        progressIcon = <FontAwesomeIcon fontSize={30} icon={faLightbulb} className='text-white'/>;
+    } else if (questionReview.easiness < 2.5) {
+        progressIcon = <FontAwesomeIcon fontSize={30} icon={faBookOpen} className='text-white'/>
+    } else {
+        progressIcon = <FontAwesomeIcon fontSize={30} icon={faCircleCheck} className='text-white'/>
+    }
 
     const [fadeOutAnimation, api] = useSpring(() => ({
         from: {opacity: 0, x: 0, y: -50},
@@ -34,17 +45,16 @@ function Card({ updateCardHandler, cardData }) {
     return (
         <>
             {<animated.div style={fadeOutAnimation} className='flex flex-col justify-between rounded-md bg-third shadow-md w-64'>
-            <div className='flex flex-col bg-second items-start rounded-t-md p-2'>
-                <a href={question.url} target="_blank" rel="noopener noreferrer" className='text-white mb-3'>{question.title}</a>
-                <DifficultyLabel difficulty={question.difficulty}/>
+            <div className='flex bg-second items-start rounded-t-md p-2'>
+                <div className='flex flex-col items-start'>
+                    <a href={question.url} target="_blank" rel="noopener noreferrer" className='text-white mb-3'>{question.title}</a>
+                    <DifficultyLabel difficulty={question.difficulty}/>
+                </div>
+                <div className='flex ml-auto'>
+                    {progressIcon}
+                </div>
             </div>
             <div className='flex justify-around items-center p-2 h-16'>
-                {/* <button 
-                
-                type='button' 
-                className='focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'>
-                Again
-                </button> */}
                 <FontAwesomeIcon fontSize={30} icon={faThumbsDown} className='text-white cursor-pointer hover:text-second transition duration-300' onClick={(event) => buttonClick(easy_quality, -100)}/>
                 <FontAwesomeIcon fontSize={30} icon={faThumbsUp} className='text-white cursor-pointer hover:text-second transition duration-300' onClick={(event) => buttonClick(again_quality, 100)}/>
 

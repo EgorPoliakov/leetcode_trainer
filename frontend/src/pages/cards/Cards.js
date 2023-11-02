@@ -128,8 +128,9 @@ function Cards() {
     return (
         <>
             <Header showHero={false}/>
+            
             <div className='col-span-full bg-main'>
-                <h2 className='text-center justify-self-start p-5 text-white'>{deckData.title}</h2>
+                <h2 className='text-3xl font-bold text-center justify-self-start p-5 text-white'>{deckData.title}</h2>
                 <div className='flex flex-col h-full items-center justify-center -mt-16'>
                     {cardElement}
                     {progressElement}
