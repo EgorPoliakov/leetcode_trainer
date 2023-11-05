@@ -2,7 +2,7 @@ import React from "react";
 
 function Hero(props) {
     return (
-        <section className="bg-no-repeat bg-center bg-cover bg-hero h-full flex flex-col">
+        <section className="bg-no-repeat bg-center bg-cover bg-hero flex flex-col col-span-full h-[92vh]">
             {props.children}
             <div className="grid max-w-screen-xl px-4 lg:gap-8 xl:gap-0 lg:grid-cols-12 m-auto">
                 <div className="mr-auto place-self-center lg:col-span-7">

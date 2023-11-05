@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Link } from 'react-router-dom';
 import { ProfileMenu } from '../../components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,13 +23,11 @@ export const navLinks = [
     },
 ];
 
-const Navbar = ({showHero, user, loginHandler, logoutHandler}) => {
-    const [active, setActive] = useState("Home");
+const Navbar = memo(function Navbar({showHero, user, loginHandler, logoutHandler}) {
+  console.log('rerender');
     const [toggle, setToggle] = useState(false);
     let navClass = null;
     if (!showHero) {
-        console.log(showHero);
-
         navClass = 'bg-main';
     }
 
@@ -46,64 +44,56 @@ const Navbar = ({showHero, user, loginHandler, logoutHandler}) => {
     </div>;
     }
 
-    
-
-  return (
-    <nav className={`${navClass} w-full flex justify-between items-center navbar lg:px-24 sm:px-10 px-4 h-[8vh]`}>
-      {/* Logo */}
-        <Link to="/" className="mr-16">
-            <span className="text-2xl font-semibold whitespace-nowrap text-white">LeetCoach</span>
-        </Link>
-        
-        {/* Desktop Navigation */}
-        <ul className="list-none sm:flex hidden items-center flex-1">
-        {navLinks.map((item, index) => (
-            <li
-            key={item.title}
-            className={`text-white hover:text-gray-300 cursor-pointer text-[16px] ${
-                active === item.title ? "text-white" : "text-dimWhite"
-            } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`}
-            onClick={() => setActive(item.title)}
-            >
-            <Link to={item.link}>{item.title}</Link>
-            </li>
-        ))}
-        </ul>
-        {userElement}
+    return (
+      <nav className={`${navClass} w-full flex justify-between items-center navbar lg:px-24 sm:px-10 px-4 h-[8vh]`}>
+        {/* Logo */}
+          <Link to="/" className="mr-16">
+              <span className="text-2xl font-semibold whitespace-nowrap text-white">LeetCoach</span>
+          </Link>
           
-
-      {/* Mobile Navigation */}
-      <div className="sm:hidden flex flex-1 justify-end items-center">
-        <FontAwesomeIcon
-          icon={faBars}
-          className="w-[28px] h-[28px] object-contain text-white"
-          onClick={() => setToggle(!toggle)}
-        />
-
-        {/* Sidebar */}
-        <div
-          className={`${
-            !toggle ? "hidden" : "flex"
-          } flex-col p-6 bg-black-gradient absolute top-10 right-0 mx-4 my-2 min-w-[140px] rounded-xl sidebar`}
-        >
-          <ul className="list-none flex justify-end items-start flex-1 flex-col">
-            {navLinks.map((item, index) => (
+          {/* Desktop Navigation */}
+          <ul className="list-none sm:flex hidden items-center flex-1">
+          {navLinks.map((item, index) => (
               <li
-                key={item.title}
-                className={`font-poppins font-medium cursor-pointer text-[16px] text-white ${
-                  active === item.title ? "text-white" : "text-dimWhite"
-                } ${index === navLinks.length - 1 ? "mb-0" : "mb-4"}`}
-                onClick={() => setActive(item.title)}
+              key={item.title}
+              className={`text-white hover:text-gray-300 cursor-pointer text-[16px]  ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`}
               >
-                <Link to={item.link}>{item.title}</Link>
+              <Link to={item.link}>{item.title}</Link>
               </li>
-            ))}
+          ))}
           </ul>
-          {userElementMobile}
+          {userElement}
+            
+
+        {/* Mobile Navigation */}
+        <div className="sm:hidden flex flex-1 justify-end items-center">
+          <FontAwesomeIcon
+            icon={faBars}
+            className="w-[28px] h-[28px] object-contain text-white"
+            onClick={() => setToggle(!toggle)}
+          />
+
+          {/* Sidebar */}
+          <div
+            className={`${
+              !toggle ? "hidden" : "flex"
+            } flex-col p-6 bg-black-gradient absolute top-10 right-0 mx-4 my-2 min-w-[140px] rounded-xl sidebar`}
+          >
+            <ul className="list-none flex justify-end items-start flex-1 flex-col">
+              {navLinks.map((item, index) => (
+                <li
+                  key={item.title}
+                  className={`font-poppins font-medium cursor-pointer text-[16px] text-white  ${index === navLinks.length - 1 ? "mb-0" : "mb-4"}`}
+                >
+                  <Link to={item.link}>{item.title}</Link>
+                </li>
+              ))}
+            </ul>
+            {userElementMobile}
+          </div>
         </div>
-      </div>
-    </nav>
-  );
-};
+      </nav>
+    );
+});
 
 export default Navbar;

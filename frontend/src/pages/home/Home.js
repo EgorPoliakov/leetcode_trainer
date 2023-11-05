@@ -1,16 +1,17 @@
-import React from "react";
+import React, {useCallback} from "react";
 import { useOutletContext } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBrain, faChartLine, faClock } from "@fortawesome/free-solid-svg-icons";
 
 import { Header, Footer } from "../../containers";
-import { FeatureCard, PopUp } from "../../components";
+import { FeatureCard, PopUp, Hero } from "../../components";
 function Home() {
     const context = useOutletContext();
-    const [message, setMessage] = context.messageContext;
+    const [message, setMessageHandler] = context.messageContext;
     let popUp = null;
+    
     const closePopUpHandler = () => {
-        setMessage();
+        setMessageHandler();
     }
 
     if (message) {
@@ -19,7 +20,8 @@ function Home() {
 
     return (
       <>
-          <Header showHero={true} setMessageHandler={setMessage}/>
+          <Hero>
+          </Hero>
           {popUp}
           <section className="col-span-full text-center py-10 lg:px-32 px-10 bg-main">
             <h2 className="mb-20 text-3xl font-bold text-white">Why is it so great?</h2>
@@ -41,7 +43,6 @@ function Home() {
               />
             </div>
           </section>
-          <Footer />
       </>
     );
 }

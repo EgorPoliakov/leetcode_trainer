@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
-import { Hero, Navbar } from '../../components';
-import { useState } from 'react';
+import React, { useEffect} from 'react';
+import { Navbar } from '../../components';
+import { useState, useCallback } from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import constants from '../../constants';
 import api from '../../Api';
 import { useNavigate } from 'react-router-dom';
 
 
-function Header({ showHero }) {
+function Header() {
     const endpoints = constants.endpoints;
     const domain = endpoints.domain;
     const prefix = endpoints.prefixes.auth;
@@ -38,40 +38,26 @@ function Header({ showHero }) {
         flow: 'auth-code',
     });
 
-    const logoutHandler = async () => {
+
+    const logoutHandler = useCallback(async () => {
         const url = `${domain}/${prefix}/logout`;
         const response = await api.get(url);
         setUser();
         localStorage.removeItem('user');
         navigate('/');
-    }
+    }, [domain, navigate, prefix]);
 
     useEffect(() => {
         setUserHandler();
     }, []);
 
-    let headerHeight = 'h-[100vh]';
-    const navElement = <Navbar 
-    showHero={showHero} 
-    user={user} 
-    loginHandler={loginHandler}
-    logoutHandler={logoutHandler}
-    />
-
-    let headerElement = (
-        <Hero>
-            {navElement}
-        </Hero>
-    );
-
-    if (!showHero) {
-        headerHeight = null;
-        headerElement = navElement;
-    }
-
     return (
-        <div className={`col-span-full ${headerHeight}`}>
-            {headerElement}
+        <div className={`col-span-full`}>
+            <Navbar 
+            user={user} 
+            loginHandler={loginHandler}
+            logoutHandler={logoutHandler}
+            />
         </div>
     );
 }

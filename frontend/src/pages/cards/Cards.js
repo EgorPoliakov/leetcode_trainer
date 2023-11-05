@@ -1,10 +1,9 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { Card } from '../../components';
 import api from '../../Api';
-import { Footer, Header } from '../../containers';
 import constants from '../../constants';
 
 function Cards() {
@@ -18,23 +17,23 @@ function Cards() {
     const [deck, setDeck] = useState([]);
     const [currentCardIdx, setCurrentCardIdx] = useState(0);
 
-    const percentFinishedLearned = deckData.cards_learned != 0 ? 100 * cardsFinishedLearned / deckData.cards_learned : 0;
-    const percentFinishedStudying = deckData.cards_studying != 0 ? 100 * cardsFinishedStudying / deckData.cards_studying : 0;
-    const percentFinishedToReview = deckData.cards_to_review != 0 ? 100 * cardsFinishedToReview / deckData.cards_to_review : 0;
+    const percentFinishedLearned = deckData.cards_learned !== 0 ? 100 * cardsFinishedLearned / deckData.cards_learned : 0;
+    const percentFinishedStudying = deckData.cards_studying !== 0 ? 100 * cardsFinishedStudying / deckData.cards_studying : 0;
+    const percentFinishedToReview = deckData.cards_to_review !== 0 ? 100 * cardsFinishedToReview / deckData.cards_to_review : 0;
 
-    const fetchDeck = async () => {
+    const fetchDeck = useCallback(async () => {
         const endpoints = constants.endpoints;
         const url = `${endpoints.domain}/${endpoints.prefixes.cards}/decks/${deckData.id}/study`
         const response = await api.get(url);
         setDeck(response.data);
         setLoading(false);
-    };
+    }, [deckData.id]);
 
     const finishCardHandler = async (quality) => {
         const currentCard = deck[currentCardIdx];
         const endpoints = constants.endpoints;
         
-        if (currentCard.question_reviews.length == 0) {
+        if (currentCard.question_reviews.length === 0) {
             const userData = JSON.parse(localStorage.getItem('user'));
             const requestData = {
                 question_card_id: currentCard.id,
@@ -74,7 +73,7 @@ function Cards() {
     useEffect(() => {
         fetchDeck();
         
-    }, []);
+    }, [fetchDeck]);
 
     let cardElement = null;
     let progressElement = null;
@@ -127,8 +126,6 @@ function Cards() {
 
     return (
         <>
-            <Header showHero={false}/>
-            
             <div className='col-span-full bg-main'>
                 <h2 className='text-3xl font-bold text-center justify-self-start p-5 text-white'>{deckData.title}</h2>
                 <div className='flex flex-col h-full items-center justify-center -mt-16'>
@@ -136,7 +133,6 @@ function Cards() {
                     {progressElement}
                 </div>
             </div>
-            <Footer />
         </>
     );
 }

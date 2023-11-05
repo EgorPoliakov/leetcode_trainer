@@ -10,12 +10,12 @@ import constants from '../../constants'
 
 function Decks() {
     const context = useOutletContext();
-    const [message, setMessage] = context.messageContext;
-    const [isLoading, setIsLoading] = context.loadingContext;
+    const [message, setMessageHandler] = context.messageContext;
+    const [isLoading, setIsLoadingHandler] = context.loadingContext;
     const [decks, setDecks] = useState([]);
     const navigate = useNavigate();
     const fetchDecks = async () => {
-        setIsLoading(true);
+        setIsLoadingHandler(true);
         const endpoints = constants.endpoints;
         const domain = endpoints.domain;
         const prefix = endpoints.prefixes.cards;
@@ -31,7 +31,7 @@ function Decks() {
                         type: 'Error',
                         text: 'Please log in first'
                     }
-                    setMessage(message);
+                    setMessageHandler(message);
                     navigate('/');
                 }
             } else if (error.request) {
@@ -39,13 +39,13 @@ function Decks() {
                     type: 'Error',
                     text: error.message
                 }
-                setMessage(message);
+                setMessageHandler(message);
                 navigate('/');
             } else {
                 console.log(error.message)
             }            
         } finally {
-            setIsLoading(false);
+            setIsLoadingHandler(false);
         }
     }
 
@@ -58,14 +58,12 @@ function Decks() {
     });
     return (
         <>
-            <Header showHero={false}/>
             <div className='flex justify-center items-center col-span-full bg-main'>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5'>
                     {decksElement}
                 </div>
                 {isLoading ? <FontAwesomeIcon icon={faSpinner} fontSize={70} className='text-white' spinPulse /> : null}
             </div>
-            <Footer />
         </>
     );
 }
