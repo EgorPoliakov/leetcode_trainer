@@ -69,3 +69,5 @@ add-strings
 find-peak-element
 subsets
 kth-largest-element-in-an-array
+moving-average-from-data-stream
+random-pick-with-weight

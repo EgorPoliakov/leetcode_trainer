@@ -5,3 +5,4 @@ export { default as DifficultyLabel } from './difficulty_label/DifficultyLabel';
 export { default as Hero } from './hero/Hero';
 export { default as ProfileMenu } from './profile_menu/ProfileMenu';
 export { default as PopUp } from './pop_up/PopUp';
+export { default as FeatureCard } from './feature_card/FeatureCard';

@@ -3,9 +3,14 @@ import { useState } from 'react';
 
 function Layout() {
     const [message, setMessage] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+    const context = {
+        messageContext: [message, setMessage],
+        loadingContext: [isLoading, setIsLoading]
+    }
     return (
         <div className='grid grid-rows-layout grid-cols-layout min-h-full'>
-            <Outlet context={[message, setMessage]}/>
+            <Outlet context={context}/>
         </div>
     );
 }
