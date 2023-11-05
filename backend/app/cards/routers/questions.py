@@ -6,9 +6,9 @@ from app.dependencies import get_db
 
 router = APIRouter()
 
-@router.get('/questions/')
+@router.get('/questions/', response_model=list[schemas.QuestionRead])
 def read_questions(skip: int, limit: int, db: Session = Depends(get_db)):
-    questions = crud.read_question(db, skip, limit)
+    questions = crud.read_questions(db, skip, limit)
     return questions
 
 @router.post('/questions/')
@@ -16,13 +16,3 @@ def create_question(question: schemas.QuestionCreate, db: Session = Depends(get_
     created_question = crud.create_question(db, question)
     return created_question
 
-@router.get('/reviews/', response_model=list[schemas.QuestionReviewRead])
-def read_reviews(skip: int, limit: int, db: Session = Depends(get_db)):
-    reviews = crud.read_reviews(db, skip, limit)
-    return reviews
-
-@router.put('/reviews/{review_id}', response_model=schemas.QuestionReviewRead)
-def update_review(review_id, question_review: schemas.QuestionReviewUpdate, db: Session = Depends(get_db)):
-    quality = question_review.quality
-    updated_review = crud.update_review(db, review_id, quality)
-    return updated_review

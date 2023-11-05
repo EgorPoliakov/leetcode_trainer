@@ -6,19 +6,25 @@ from app.auth.schemas import GoogleUser
 from app.supermemo2 import SMTwo
 from datetime import date
 
-def create_question(db: Session, question):
+def create_question(db: Session, question: schemas.QuestionCreate):
     db_question = models.Question(
         title=question.title,
         url=question.url,
         difficulty=question.difficulty,
         is_premium=question.is_premium
     )
+
+    for tag in question.tag_ids:
+        db_tag = db.query(models.QuestionTag).get(tag.id)
+        db_question.question_tags.append(db_tag)
+        db_tag.questions.append(db_question)
+
     db.add(db_question)
     db.commit()
     db.refresh(db_question)
     return db_question
 
-def read_question(db: Session, skip: int=0, limit: int=10):
+def read_questions(db: Session, skip: int=0, limit: int=10):
     questions = db.query(models.Question).offset(skip).limit(limit).all()
     return questions
 
@@ -138,3 +144,15 @@ def update_review(db: Session, review_id: int, quality: int):
     db.commit()
     return db_review
 
+def create_question_tag(db: Session, tag_name: str):
+    db_tag = models.QuestionTag(
+        name=tag_name
+    )
+    db.add(db_tag)
+    db.commit()
+    db.refresh(db_tag)
+    return db_tag
+
+def read_question_tags(db: Session, skip: int=0, limit: int=100):
+    db_tag = db.query(models.QuestionTag).offset(skip).limit(limit).all()
+    return db_tag

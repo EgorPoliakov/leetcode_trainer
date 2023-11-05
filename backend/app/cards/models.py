@@ -1,8 +1,13 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float, Table
 from sqlalchemy.orm import relationship, mapped_column
-from datetime import date
 from app.database import Base
 
+QuestionToTag = Table(
+    'question_to_tag',
+    Base.metadata,
+    Column('question_id', Integer, ForeignKey('question.id')),
+    Column('tag_id', Integer, ForeignKey('question_tag.id'))
+)
 
 class Question(Base):
     __tablename__ = 'question'
@@ -13,6 +18,8 @@ class Question(Base):
     difficulty = Column(Integer)
     is_premium = Column(Boolean)
     question_card = relationship('QuestionCard', back_populates='question')
+
+    question_tags = relationship('QuestionTag', secondary=QuestionToTag, back_populates='questions')
 
 class QuestionReview(Base):
     __tablename__ = 'question_review'
@@ -47,4 +54,9 @@ class Deck(Base):
     description = Column(String)
 
     question_cards = relationship('QuestionCard', back_populates='deck')
-    
+
+class QuestionTag(Base):
+    __tablename__ = 'question_tag'
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    questions = relationship('Question', secondary=QuestionToTag, back_populates='question_tags')

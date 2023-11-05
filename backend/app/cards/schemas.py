@@ -1,17 +1,32 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+class QuestionTagCreate(BaseModel):
+    name: str
+
+class QuestionTagRead(QuestionTagCreate):
+    id: int
+
+class QuestionTagAssociate(BaseModel):
+    id: int
+
 class QuestionCreate(BaseModel):
     title: str
     url: str
     difficulty: int
     is_premium: bool
+    tag_ids: list[QuestionTagAssociate]
 
     class Config:
         from_attributes = True
 
-class QuestionRead(QuestionCreate):
+class QuestionRead(BaseModel):
     id: int
+    title: str
+    url: str
+    difficulty: int
+    is_premium: bool
+    question_tags: list[QuestionTagRead]
 
 class QuestionReviewBase(BaseModel):
     question_card_id: int
