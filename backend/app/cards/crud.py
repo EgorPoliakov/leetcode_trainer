@@ -19,6 +19,11 @@ def create_question(db: Session, question: schemas.QuestionCreate):
         db_question.question_tags.append(db_tag)
         db_tag.questions.append(db_question)
 
+    for sub_tag in question.sub_tag_ids:
+        db_sub_tag = db.query(models.QuestionSubTag).get(sub_tag.id)
+        db_question.question_sub_tags.append(db_sub_tag)
+        db_sub_tag.questions.append(db_question)
+
     db.add(db_question)
     db.commit()
     db.refresh(db_question)
@@ -153,6 +158,19 @@ def create_question_tag(db: Session, tag_name: str):
     db.refresh(db_tag)
     return db_tag
 
+def create_question_sub_tag(db:Session, sub_tag_name: str):
+    db_sub_tag = models.QuestionSubTag(
+        name=sub_tag_name
+    )
+    db.add(db_sub_tag)
+    db.commit()
+    db.refresh(db_sub_tag)
+    return db_sub_tag
+
 def read_question_tags(db: Session, skip: int=0, limit: int=100):
     db_tag = db.query(models.QuestionTag).offset(skip).limit(limit).all()
     return db_tag
+
+def read_question_sub_tags(db: Session, skip: int=0, limit: int=100):
+    db_sub_tag = db.query(models.QuestionSubTag).offset(skip).limit(limit).all()
+    return db_sub_tag

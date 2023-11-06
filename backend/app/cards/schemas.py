@@ -4,10 +4,19 @@ from datetime import datetime
 class QuestionTagCreate(BaseModel):
     name: str
 
+class QuestionSubTagCreate(BaseModel):
+    name: str
+
 class QuestionTagRead(QuestionTagCreate):
     id: int
 
+class QuestionSubTagRead(QuestionSubTagCreate):
+    id: int
+
 class QuestionTagAssociate(BaseModel):
+    id: int
+
+class QuestionSubTagAssociate(BaseModel):
     id: int
 
 class QuestionCreate(BaseModel):
@@ -15,7 +24,8 @@ class QuestionCreate(BaseModel):
     url: str
     difficulty: int
     is_premium: bool
-    tag_ids: list[QuestionTagAssociate]
+    question_tag_ids: list[QuestionTagAssociate]
+    question_sub_tag_ids: list[QuestionSubTagAssociate]
 
     class Config:
         from_attributes = True
@@ -27,6 +37,7 @@ class QuestionRead(BaseModel):
     difficulty: int
     is_premium: bool
     question_tags: list[QuestionTagRead]
+    question_sub_tags: list[QuestionSubTagRead]
 
 class QuestionReviewBase(BaseModel):
     question_card_id: int

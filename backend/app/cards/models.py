@@ -9,6 +9,13 @@ QuestionToTag = Table(
     Column('tag_id', Integer, ForeignKey('question_tag.id'))
 )
 
+QuestionToSubTag = Table(
+    'question_to_sub_tag',
+    Base.metadata,
+    Column('question_id', Integer, ForeignKey('question.id')),
+    Column('sub_tag_id', Integer, ForeignKey('question_sub_tag.id'))
+)
+
 class Question(Base):
     __tablename__ = 'question'
 
@@ -17,9 +24,10 @@ class Question(Base):
     url = Column(String)
     difficulty = Column(Integer)
     is_premium = Column(Boolean)
-    question_card = relationship('QuestionCard', back_populates='question')
 
+    question_card = relationship('QuestionCard', back_populates='question')
     question_tags = relationship('QuestionTag', secondary=QuestionToTag, back_populates='questions')
+    question_sub_tags = relationship('QuestionSubTag', secondary=QuestionToSubTag, back_populates='questions')
 
 class QuestionReview(Base):
     __tablename__ = 'question_review'
@@ -60,3 +68,9 @@ class QuestionTag(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     questions = relationship('Question', secondary=QuestionToTag, back_populates='question_tags')
+
+class QuestionSubTag(Base):
+    __tablename__ = 'question_sub_tag'
+    id =  Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    questions = relationship('Question', secondary=QuestionToSubTag, back_populates='question_sub_tags')
