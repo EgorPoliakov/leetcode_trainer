@@ -6,3 +6,4 @@ export { default as Hero } from './hero/Hero';
 export { default as ProfileMenu } from './profile_menu/ProfileMenu';
 export { default as PopUp } from './pop_up/PopUp';
 export { default as FeatureCard } from './feature_card/FeatureCard';
+export { default as WholeScreenPopUp} from './whole_screen_pop_up/WholeScreenPopUp';

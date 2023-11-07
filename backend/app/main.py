@@ -36,14 +36,18 @@ def create_test_db(db: Session = Depends(get_db)):
         title='Two Sum',
         url='https://leetcode.com/problems/two-sum',
         difficulty=0,
-        is_premium=False
+        is_premium=False,
+        question_tag_ids=[{"id": 1}],
+        question_sub_tag_ids=[{"id": 1}]
     )
 
     question2 = schemas.QuestionCreate(
         title='Longest Common Prefix',
         url='https://leetcode.com/problems/longest-common-prefix',
         difficulty=0,
-        is_premium=False
+        is_premium=False,
+        question_tag_ids=[{"id": 1}],
+        question_sub_tag_ids=[{"id": 1}]
     )
 
     created_question = crud.create_question(db, question)
@@ -54,7 +58,7 @@ def create_test_db(db: Session = Depends(get_db)):
     deck = schemas.DeckCreate(
         title='Easy questions',
         difficulty=0,
-        description='A deck with easy questions'
+        description='A deck with easy questions',        
     )
 
     created_deck = crud.create_deck(db, deck)
@@ -62,7 +66,7 @@ def create_test_db(db: Session = Depends(get_db)):
     card1 = schemas.QuestionCardCreate(
         question_id=question_id1, 
         type=0,
-        deck_id=created_deck.id
+        deck_id=created_deck.id,
     )
 
     card2 = schemas.QuestionCardCreate(

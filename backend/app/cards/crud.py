@@ -14,12 +14,12 @@ def create_question(db: Session, question: schemas.QuestionCreate):
         is_premium=question.is_premium
     )
 
-    for tag in question.tag_ids:
+    for tag in question.question_tag_ids:
         db_tag = db.query(models.QuestionTag).get(tag.id)
         db_question.question_tags.append(db_tag)
         db_tag.questions.append(db_question)
 
-    for sub_tag in question.sub_tag_ids:
+    for sub_tag in question.question_sub_tag_ids:
         db_sub_tag = db.query(models.QuestionSubTag).get(sub_tag.id)
         db_question.question_sub_tags.append(db_sub_tag)
         db_sub_tag.questions.append(db_question)
