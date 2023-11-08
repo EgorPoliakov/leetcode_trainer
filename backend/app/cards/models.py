@@ -60,6 +60,7 @@ class Deck(Base):
     title = Column(String, unique=True, index=True)
     difficulty = Column(Integer)
     description = Column(String)
+    question_tag_id = Column(Integer)
 
     question_cards = relationship('QuestionCard', back_populates='deck')
 

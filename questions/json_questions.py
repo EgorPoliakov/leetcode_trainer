@@ -24,7 +24,8 @@ for i in data:
 
   
 for q in new_json:
-    if(len(q['tag']) > 1 or len(q['sub_tag']) > 1):
+    #if(len(q['tag']) > 1 or len(q['sub_tag']) > 1):
+    if(len(q['tag']) > 1):    
         print(q['id'], q['tag'], q['sub_tag'])
 
 jsonList = json.dumps(new_json)

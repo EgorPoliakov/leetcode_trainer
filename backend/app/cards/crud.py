@@ -92,7 +92,11 @@ def read_deck(db: Session, deck_id: int):
     db_deck = db.query(models.Deck).filter(models.Deck.id == deck_id).first()
     return db_deck
 
-def read_decks(db: Session, user: GoogleUser, skip: int=0, limit: int=100):
+def read_decks(db: Session, skip: int=0, limit: int=100):
+    db_decks = db.query(models.Deck).offset(skip).limit(limit).all()
+    return db_decks
+
+def read_user_decks(db: Session, user: GoogleUser, skip: int=0, limit: int=100):
     db_decks = db.query(models.Deck).offset(skip).limit(limit).all()
 
     for deck in db_decks:

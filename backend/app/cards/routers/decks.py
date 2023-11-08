@@ -7,9 +7,14 @@ from app.dependencies import get_db, get_current_user
 
 router = APIRouter()
 
+@router.get('/decks/all', response_model=list[schemas.DeckReadAll])
+def read_decks(skip: int, limit: int, db: Session = Depends(get_db)):
+    decks = crud.read_decks(db, skip, limit)
+    return decks
+
 @router.get('/decks', response_model=list[schemas.DeckRead])
-def read_decks(skip: int, limit: int, db: Session = Depends(get_db), user: GoogleUser = Depends(get_current_user)):
-    decks = crud.read_decks(db, user, skip, limit)
+def read_user_decks(skip: int, limit: int, db: Session = Depends(get_db), user: GoogleUser = Depends(get_current_user)):
+    decks = crud.read_user_decks(db, user, skip, limit)
     return decks
 
 @router.get('/decks/{deck_id}', response_model=schemas.DeckRead)

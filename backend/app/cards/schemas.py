@@ -78,7 +78,7 @@ class DeckCreate(BaseModel):
     title: str
     difficulty: int
     description: str
-    question_tag_id: str
+    question_tag_id: int
     class Config:
         from_attributes = True
 
@@ -87,6 +87,9 @@ class DeckRead(DeckCreate):
     cards_learned: int
     cards_studying: int
     cards_to_review: int
+    
+class DeckReadAll(DeckCreate):
+    id: int
 
 class QuestionReviewUpdate(BaseModel):
     quality: int
