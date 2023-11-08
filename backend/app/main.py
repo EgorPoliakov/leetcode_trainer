@@ -58,7 +58,8 @@ def create_test_db(db: Session = Depends(get_db)):
     deck = schemas.DeckCreate(
         title='Easy questions',
         difficulty=0,
-        description='A deck with easy questions',        
+        description='A deck with easy questions',   
+        question_tag_id=1     
     )
 
     created_deck = crud.create_deck(db, deck)

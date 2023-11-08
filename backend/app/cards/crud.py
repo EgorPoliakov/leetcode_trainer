@@ -124,7 +124,8 @@ def create_deck(db: Session, deck: schemas.DeckCreate):
     db_deck = models.Deck(
         title=deck.title,
         difficulty=deck.difficulty,
-        description=deck.description
+        description=deck.description,
+        question_tag_id=deck.question_tag_id
     )
 
     db.add(db_deck)

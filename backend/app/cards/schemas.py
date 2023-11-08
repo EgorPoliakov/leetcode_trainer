@@ -78,6 +78,7 @@ class DeckCreate(BaseModel):
     title: str
     difficulty: int
     description: str
+    question_tag_id: str
     class Config:
         from_attributes = True
 
