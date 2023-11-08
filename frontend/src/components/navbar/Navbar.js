@@ -34,13 +34,12 @@ const Navbar = memo(function Navbar({showHero, user, loginHandler, logoutHandler
     let userElement = null;
     let userElementMobile = null;
 
-    if ('email' in user) {
+    if (user && 'email' in user) {
         userElement = <ProfileMenu logoutHandler={logoutHandler} user={user} className={"sm:flex hidden items-center gap-4"}/>
         userElementMobile = <ProfileMenu logoutHandler={logoutHandler} user={user} className={"flex items-center gap-4"}/>
     } else {
         userElement = <div className="rounded-xl m-5">
-        <button onClick={() => loginHandler()} className="px-4 py-2 rounded-l-xl text-white m-0 bg-main hover:bg-main-hover transition">Login</button>
-        <button className="px-4 py-2 rounded-r-xl bg-neutral-50 hover:bg-neutral-200 transition">Register</button>
+        <button onClick={() => loginHandler()} className="px-4 py-2 rounded-xl bg-neutral-50 hover:bg-neutral-200 transition">Login</button>
     </div>;
     }
 

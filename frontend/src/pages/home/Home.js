@@ -3,7 +3,6 @@ import { useOutletContext } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBrain, faChartLine, faClock } from "@fortawesome/free-solid-svg-icons";
 
-import { Header, Footer } from "../../containers";
 import { FeatureCard, PopUp, Hero } from "../../components";
 function Home() {
     const context = useOutletContext();

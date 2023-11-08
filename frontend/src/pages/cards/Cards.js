@@ -1,15 +1,19 @@
 import React from 'react'
 import { useState, useEffect, useCallback } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useOutletContext } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import ProgressBar from "@ramonak/react-progress-bar";
-import { Card } from '../../components';
+import { Card, WholeScreenPopUp } from '../../components';
 import api from '../../Api';
 import constants from '../../constants';
 
 function Cards() {
     const location = useLocation();
+    const context = useOutletContext();
     const deckData = location.state;
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoadingHandler] = context.loadingContext;
     const [cardsFinishedLearned, setCardsFinishedLearned] = useState(0);
     const [cardsFinishedStudying, setCardsFinishedStudying] = useState(0);
     const [cardsFinishedToReview, setCardsFinishedToReview] = useState(0);
@@ -22,12 +26,13 @@ function Cards() {
     const percentFinishedToReview = deckData.cards_to_review !== 0 ? 100 * cardsFinishedToReview / deckData.cards_to_review : 0;
 
     const fetchDeck = useCallback(async () => {
+        setIsLoadingHandler(true);
         const endpoints = constants.endpoints;
         const url = `${endpoints.domain}/${endpoints.prefixes.cards}/decks/${deckData.id}/study`
         const response = await api.get(url);
         setDeck(response.data);
-        setLoading(false);
-    }, [deckData.id]);
+        setIsLoadingHandler(false);
+    }, [deckData.id, setIsLoadingHandler]);
 
     const finishCardHandler = async (quality) => {
         const currentCard = deck[currentCardIdx];
@@ -78,12 +83,6 @@ function Cards() {
     let cardElement = null;
     let progressElement = null;
 
-    if (loading) {
-        cardElement = <div className='text-white'>
-            Loading
-        </div>
-    }
-
     if (deck.length !== 0) {
         cardElement = <Card updateCardHandler={updateCardHandler} cardData={deck[currentCardIdx]}/>;
             progressElement = <div className='w-96 mt-5'>
@@ -94,43 +93,26 @@ function Cards() {
                 bgColor='#8F5AFF'
                 isLabelVisible={false}/>
             </div>
-            {/* <div className='w-16'>
-                <CircularProgressbarWithChildren value={percentFinishedStudying}>
-                    Studying
-                </CircularProgressbarWithChildren>
-            </div>
-            <div className='w-16'>
-                <CircularProgressbarWithChildren value={percentFinishedLearned}>
-                    Learned
-                </CircularProgressbarWithChildren>
-            </div> */}
         
     }
     console.log(percentFinishedLearned)
 
     if (deck.length !== 0 && currentCardIdx >= deck.length) {
-        cardElement = <div className='text-white'>
-            Finished all cards!
-            <Link to='/decks'>Home</Link>
-        </div>
+        cardElement = <WholeScreenPopUp />
     }
 
-    if (!loading && deck.length === 0) {
-        cardElement = <div className='text-white'>
-            Finished all cards!
-            <Link to='/decks'>Home</Link>
-        </div>
+    if (!isLoading && deck.length === 0) {
+        cardElement = <WholeScreenPopUp />
     }
-
-    
 
     return (
         <>
             <div className='col-span-full bg-main'>
                 <h2 className='text-3xl font-bold text-center justify-self-start p-5 text-white'>{deckData.title}</h2>
                 <div className='flex flex-col h-full items-center justify-center -mt-16'>
-                    {cardElement}
-                    {progressElement}
+                    {!isLoading ? cardElement : null}
+                    {!isLoading ? progressElement: null}
+                    {isLoading ? <FontAwesomeIcon icon={faSpinner} fontSize={70} className='text-white' spinPulse /> : null}
                 </div>
             </div>
         </>
