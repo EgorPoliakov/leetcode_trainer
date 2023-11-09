@@ -1,4 +1,4 @@
-with open('questions/Readme.md.txt') as f:
+with open('questions/raw_questions.txt') as f:
     lines = f.readlines()
 
 def retrieve_tag(s):
