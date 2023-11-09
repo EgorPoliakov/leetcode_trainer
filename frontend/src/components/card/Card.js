@@ -44,8 +44,8 @@ function Card({ updateCardHandler, cardData }) {
     const easy_quality = 5;
     return (
         <>
-            {<animated.div style={fadeOutAnimation} className='flex flex-col justify-between rounded-md bg-third shadow-md w-64'>
-            <div className='flex bg-second items-start rounded-t-md p-2'>
+            {<animated.div style={fadeOutAnimation} className='flex flex-col justify-between rounded-md bg-third shadow-md w-64 h-48'>
+            <div className='flex bg-second rounded-t-md p-4 h-[80%]'>
                 <div className='flex flex-col items-start'>
                     <a href={question.url} target="_blank" rel="noopener noreferrer" className='text-white mb-3'>{question.title}</a>
                     <DifficultyLabel difficulty={question.difficulty}/>

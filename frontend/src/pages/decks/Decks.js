@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Deck } from '../../components';
 import api from '../../Api';
-import { Footer, Header } from '../../containers';
 import constants from '../../constants'
 
 function Decks() {
@@ -19,7 +18,7 @@ function Decks() {
         const endpoints = constants.endpoints;
         const domain = endpoints.domain;
         const prefix = endpoints.prefixes.cards;
-        const url = `${domain}/${prefix}/decks?skip=0&limit=2`;
+        const url = `${domain}/${prefix}/decks?skip=0&limit=100`;
         try {
             const response = await api.get(url, {withCredentials: true});
             setDecks(response.data);

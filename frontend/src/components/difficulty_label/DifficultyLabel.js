@@ -7,7 +7,7 @@ function DifficultyLabel({difficulty}) {
     const difficultyText = difficultyMapping[difficulty].text;
     
     return (
-        <div className={`focus:outline-none ${difficultyColor} font-medium rounded-xl text-sm text-white px-4 py-1`}>
+        <div className={`focus:outline-none ${difficultyColor} font-medium rounded-xl text-sm mt-auto text-white px-4 py-1`}>
             {difficultyText}
         </div>
     );
