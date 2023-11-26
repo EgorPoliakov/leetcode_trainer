@@ -16,6 +16,13 @@ QuestionToSubTag = Table(
     Column('sub_tag_id', Integer, ForeignKey('question_sub_tag.id'))
 )
 
+CardToDeck = Table(
+    'card_to_deck',
+    Base.metadata,
+    Column('card_id', Integer, ForeignKey('question_card.id')),
+    Column('deck_id', Integer, ForeignKey('deck.id'))
+)
+
 class Question(Base):
     __tablename__ = 'question'
 
@@ -48,11 +55,10 @@ class QuestionCard(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     question_id = mapped_column(ForeignKey('question.id'))
-    deck_id = mapped_column(ForeignKey('deck.id'))
     type = Column(Integer)
     question_reviews = relationship('QuestionReview', back_populates='question_card')
     question = relationship('Question', back_populates='question_card')
-    deck = relationship('Deck', back_populates='question_cards')
+    decks = relationship('Deck', secondary=CardToDeck, back_populates='question_cards')
 
 class Deck(Base):
     __tablename__ = 'deck'
@@ -61,8 +67,7 @@ class Deck(Base):
     difficulty = Column(Integer)
     description = Column(String)
     question_tag_id = Column(Integer)
-
-    question_cards = relationship('QuestionCard', back_populates='deck')
+    question_cards = relationship('QuestionCard', secondary=CardToDeck, back_populates='decks')
 
 class QuestionTag(Base):
     __tablename__ = 'question_tag'

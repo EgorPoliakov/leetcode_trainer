@@ -24,6 +24,7 @@ with open('sample.json', 'r') as f:
     data = json.load(f)
     
 # create difficulty map for deck
+
 deck_difficulty_map = {}
 for topic in ['Two Pointers', 'Binary Search', 'Linked List', 'String', 'Stack', 'Hash Map']:
     deck_difficulty_map[topic] = 0
@@ -34,6 +35,7 @@ for topic in ['Graph', 'Trie', 'Dynamic Programming', 'Union Find', 'Tree', 'Sim
 for topic in ['Divide and Conquer', 'Math', 'Binary Index Tree', 'Others', 'Thinking', 'Segment Tree', 'Bit Manipulation', 'Deque', 'Simulation'
 ]:
     deck_difficulty_map[topic] = 3
+
 
 # Collect all tag from questions
 tag_set = set()
@@ -64,13 +66,13 @@ for i, sub_tag in enumerate(sub_tag_set):
 for tag in tag_set:
     session_tag = session.query(QuestionTag).filter(QuestionTag.name == tag).one()
     
-    instance = Deck(       
+    deck_instance = Deck(       
         title = tag,
         difficulty = deck_difficulty_map[tag],
-        description = "description",
+        description = session_tag.name,
         question_tag_id = session_tag.id
     )
-    session.add(instance)
+    session.add(deck_instance)
     session.commit()    
 
 # Put questions into table
@@ -92,8 +94,8 @@ for question in data:
     for tag_name in question['tag']:
         session_tag = session.query(QuestionTag).filter(QuestionTag.name == tag_name).one()
         question_instance.question_tags.append(session_tag)
-        session_tag.questions.append(question_instance)    
-
+        session_tag.questions.append(question_instance)
+        
     session.add(question_instance)
     session.commit()
         
@@ -105,41 +107,31 @@ for question in data:
     session.add(question_instance)
     session.commit()
     
-    if(len(question['tag']) != 1):
-        continue
-    
-    session_deck = session.query(Deck).filter(Deck.question_tag_id == question_instance.question_tags[0].id).one()
-    
-    
+    # if(len(question['tag']) != 1):
+    #     continue
+
     card_instance = QuestionCard(
         question_id = question_instance.id,
-        deck_id = session_deck.question_tag_id,
         type = 1
     )
-    
     session.add(card_instance)
-    session.commit()
-        
+    session.commit()   
+     
 
-
+    for tag_name in question['tag']:
+        session_deck = session.query(Deck).filter(Deck.title == tag_name).one()
+        card_instance.decks.append(session_deck)
+        session_deck.question_cards.append(card_instance)
+     
+       
+    #session_deck = session.query(Deck).filter(Deck.question_tag_id == question_instance.question_tags[0].id).one()
+    #card_instance = QuestionCard(
+    #    question_id = question_instance.id,
+    #    deck_id = session_deck.question_tag_id,
+    #    type = 1
+    #)
     
-'''
-def create_question(db: Session, question: schemas.QuestionCreate):
-    db_question = models.Question(
-        title=question.title,
-        url=question.url,
-        difficulty=question.difficulty,
-        is_premium=question.is_premium
-    )
-
-    for tag in question.tag_ids:
-        db_tag = db.query(models.QuestionTag).get(tag.id)
-        db_question.question_tags.append(db_tag)
-        db_tag.questions.append(db_question)
-
-    db.add(db_question)
-    db.commit()
-    db.refresh(db_question)
-    return db_question
-'''
+    #session.add(card_instance)
+    #session.commit()
+        
 

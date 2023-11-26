@@ -65,15 +65,6 @@ class QuestionCardCreate(BaseModel):
     class Config:
         from_attributes = True
 
-class QuestionCardRead(BaseModel):
-    id: int
-    type: int
-    question: QuestionRead
-    question_reviews: list[QuestionReviewRead]
-    
-    class Config:
-        from_attributes = True
-
 class DeckCreate(BaseModel):
     title: str
     difficulty: int
@@ -84,12 +75,21 @@ class DeckCreate(BaseModel):
 
 class DeckRead(DeckCreate):
     id: int
-    cards_learned: int
-    cards_studying: int
-    cards_to_review: int
+    #cards_learned: int
+    #cards_studying: int
+    #cards_to_review: int
     
 class DeckReadAll(DeckCreate):
     id: int
 
+class QuestionCardRead(BaseModel):
+    id: int
+    type: int
+    question: QuestionRead
+    question_reviews: list[QuestionReviewRead]
+    decks: list[DeckReadAll]
+    class Config:
+        from_attributes = True
+        
 class QuestionReviewUpdate(BaseModel):
     quality: int
