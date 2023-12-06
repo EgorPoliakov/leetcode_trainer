@@ -11,8 +11,32 @@ const constants = {
         {
             color: 'bg-red-600',
             text: 'Hard'
+        },
+        {
+            color: 'bg-blue-600',
+            text: 'Other'
         }
     ],
+
+    difficultyMappingDecks: [
+        {
+            color: 'bg-green-600',
+            text: 'Basic'
+        },
+        {
+            color: 'bg-yellow-600',
+            text: 'Intermediate'
+        },
+        {
+            color: 'bg-red-600',
+            text: 'Advanced'
+        },
+        {
+            color: 'bg-blue-600',
+            text: 'Other'
+        }
+    ],
+
     endpoints: {
         domain: 'http://localhost:8000',
         prefixes: {

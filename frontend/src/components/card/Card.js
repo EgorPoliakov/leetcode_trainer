@@ -6,7 +6,6 @@ import { faThumbsUp, faThumbsDown, faLightbulb, faBookOpen, faCircleCheck } from
 import DifficultyLabel from '../difficulty_label/DifficultyLabel';
 
 function Card({ updateCardHandler, cardData }) {
-    console.log(cardData)
     const question = cardData.question;
     const questionReview = cardData.question_reviews;
     const buttonClick = (quality, animationDirection) => {

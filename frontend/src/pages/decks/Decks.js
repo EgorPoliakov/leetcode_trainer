@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useOutletContext } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import Slider from 'react-slick';
+import { faSpinner, faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import { Deck } from '../../components';
 import api from '../../Api';
 import constants from '../../constants'
+
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 function Decks() {
     const context = useOutletContext();
@@ -52,16 +56,78 @@ function Decks() {
         fetchDecks();
     }, []);
 
-    const decksElement = decks.map((deck) => {
-        return <Deck deckData={deck} key={deck.id} />
+    const deckElementEasy = [];
+    const deckElementMedium = [];
+    const deckElementHard = [];
+    const deckElementOther = [];
+    
+    decks.map((deck) => {
+        const deckElement = (
+            <>
+                <div className='mx-2 mt-5'>
+                    <Deck deckData={deck} />
+                </div>
+            </>
+        );
+        switch (deck.difficulty) {
+            case 0:
+                deckElementEasy.push(deckElement);
+                break;
+            case 1:
+                deckElementMedium.push(deckElement);
+                break;
+            case 2:
+                deckElementHard.push(deckElement);
+                break;
+            case 3:
+                deckElementOther.push(deckElement);
+                break;
+        }
     });
+
+    const settings = {
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 5,
+        slidesToScroll: 1,
+    };
+
+    const decksPage = (
+        <div className='grid grid-cols-1 gap-5 px-10'>
+            <div>
+                <h2 className='text-white text-2xl font-semibold'>Basic Topics</h2>
+                <Slider {...settings}>
+                    {deckElementEasy}
+                </Slider>
+            </div>
+            <div>
+                <h2 className='text-white text-2xl font-semibold'>Intermediate Topics</h2>
+                <Slider {...settings}>
+                    {deckElementMedium}
+                </Slider>
+            </div>
+            <div>
+                <h2 className='text-white text-2xl font-semibold'>Advanced Topics</h2>
+                <Slider {...settings}>
+                    {deckElementHard}
+                </Slider>
+            </div>
+            <div>
+                <h2 className='text-white text-2xl font-semibold'>Less Important Topics</h2>
+                <Slider {...settings}>
+                    {deckElementOther}
+                </Slider>
+            </div>
+        </div>
+    );
+
     return (
         <>
             <div className='flex justify-center items-center col-span-full bg-main'>
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5'>
-                    {decksElement}
-                </div>
-                {isLoading ? <FontAwesomeIcon icon={faSpinner} fontSize={70} className='text-white' spinPulse /> : null}
+                {isLoading ? 
+                <FontAwesomeIcon icon={faSpinner} fontSize={70} className='text-white' spinPulse /> : 
+                decksPage}
             </div>
         </>
     );

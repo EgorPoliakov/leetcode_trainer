@@ -75,9 +75,9 @@ class DeckCreate(BaseModel):
 
 class DeckRead(DeckCreate):
     id: int
-    #cards_learned: int
-    #cards_studying: int
-    #cards_to_review: int
+    cards_learned: int
+    cards_studying: int
+    cards_to_review: int
     
 class DeckReadAll(DeckCreate):
     id: int

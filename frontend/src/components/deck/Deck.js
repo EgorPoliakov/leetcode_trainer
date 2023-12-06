@@ -16,7 +16,7 @@ function Deck({deckData}) {
         <div className='group flex flex-col justify-between rounded-md bg-third shadow-md hover:drop-shadow-lg transition duration-300 hover:-translate-y-1'>
             <div className='flex flex-col bg-second items-start rounded-t-md p-2'>
                 <p className='text-white text-xl font-semibold mb-3'>{deckData.title}</p>
-                <DifficultyLabel difficulty={deckData.difficulty}/>
+                <DifficultyLabel difficulty={deckData.difficulty} type={'deck'}/>
             </div>
             <div className='flex items-center justify-evenly p-2 w-80'>
                 <div className='flex flex-col text-center'>

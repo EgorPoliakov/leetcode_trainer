@@ -8,22 +8,21 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import { Card, WholeScreenPopUp } from '../../components';
 import api from '../../Api';
 import constants from '../../constants';
+import { Button } from '@material-tailwind/react';
 
 function Cards() {
     const location = useLocation();
     const context = useOutletContext();
     const deckData = location.state;
     const [isLoading, setIsLoadingHandler] = context.loadingContext;
-    const [cardsFinishedLearned, setCardsFinishedLearned] = useState(0);
-    const [cardsFinishedStudying, setCardsFinishedStudying] = useState(0);
-    const [cardsFinishedToReview, setCardsFinishedToReview] = useState(0);
+    const [cardsFinished, setCardsFinished] = useState(0);
 
     const [deck, setDeck] = useState([]);
+    const [deckReview, setDeckReview] = useState([]);
+    const [deckNew, setDeckNew] = useState([]);
     const [currentCardIdx, setCurrentCardIdx] = useState(0);
 
-    const percentFinishedLearned = deckData.cards_learned !== 0 ? 100 * cardsFinishedLearned / deckData.cards_learned : 0;
-    const percentFinishedStudying = deckData.cards_studying !== 0 ? 100 * cardsFinishedStudying / deckData.cards_studying : 0;
-    const percentFinishedToReview = deckData.cards_to_review !== 0 ? 100 * cardsFinishedToReview / deckData.cards_to_review : 0;
+    const percentFinished = deckReview.length !== 0 ? 100 * cardsFinished / deckReview.length : 0;
 
     const fetchDeck = useCallback(async () => {
         setIsLoadingHandler(true);
@@ -60,19 +59,18 @@ function Cards() {
 
     const updateCardHandler = (quality) => {
         // finishCardHandler(quality);
-        const cardEasiness = deck[currentCardIdx].easiness;
-        if (deck[currentCardIdx].question_reviews.length === 0) {
-            setCardsFinishedToReview((prevCardFinishedToReview) => prevCardFinishedToReview + 1);
-        } else if (cardEasiness > 2.5) {
-            setCardsFinishedLearned((prevCardFinishedLearned) => prevCardFinishedLearned + 1);
-        } else {
-            setCardsFinishedStudying((prevCardFinishedStudying) => prevCardFinishedStudying + 1);
-        }
-
+        setCardsFinished((prevCardFinishedToReview) => prevCardFinishedToReview + 1);
         setCurrentCardIdx(
             (prevCardIdx) => prevCardIdx + 1
         );
 
+    }
+
+    const addNewCardHandler = () => {
+        setDeckReview((prev) => {
+            const newCard = deckNew.shift();
+            return [newCard, ...prev];
+        });
     }
 
     useEffect(() => {
@@ -80,14 +78,29 @@ function Cards() {
         
     }, [fetchDeck]);
 
+    useEffect(() => {
+        const deckNew = deck.filter((card) => {
+            console.log(card.question_reviews.length);
+            return card.question_reviews.length === 0;
+        });
+    
+        const deckReview = deck.filter((card) => {
+            return card.question_reviews.length !== 0;
+        });
+        
+        setDeckNew(deckNew);
+        setDeckReview(deckReview);
+    }, [deck]);
+
     let cardElement = null;
     let progressElement = null;
 
-    if (deck.length !== 0) {
-        cardElement = <Card updateCardHandler={updateCardHandler} cardData={deck[currentCardIdx]}/>;
+    if (deckReview.length !== 0) {
+        console.log(deckReview);
+        cardElement = <Card updateCardHandler={updateCardHandler} cardData={deckReview[currentCardIdx]}/>;
             progressElement = <div className='w-96 mt-5'>
                 <ProgressBar 
-                completed={(percentFinishedLearned + percentFinishedStudying + percentFinishedToReview)} 
+                completed={(percentFinished)} 
                 width='100%' 
                 height='10px'
                 bgColor='#8F5AFF'
@@ -95,9 +108,8 @@ function Cards() {
             </div>
         
     }
-    console.log(percentFinishedLearned)
 
-    if (deck.length !== 0 && currentCardIdx >= deck.length) {
+    if (deckReview.length !== 0 && currentCardIdx >= deckReview.length) {
         cardElement = <WholeScreenPopUp />
     }
 
@@ -109,6 +121,7 @@ function Cards() {
         <>
             <div className='col-span-full bg-main'>
                 <h2 className='text-3xl font-bold text-center justify-self-start p-5 text-white'>{deckData.title}</h2>
+                <Button onClick={addNewCardHandler} className='bg-second'>New card</Button>
                 <div className='flex flex-col h-full items-center justify-center -mt-16'>
                     {!isLoading ? cardElement : null}
                     {!isLoading ? progressElement: null}
