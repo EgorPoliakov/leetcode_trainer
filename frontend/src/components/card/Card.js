@@ -19,9 +19,12 @@ function Card({ updateCardHandler, cardData }) {
     };
 
     let progressIcon = null;
+    console.log(questionReview)
     if (questionReview.length === 0) {
+        progressIcon = null;
+    } else if (questionReview[0].repetitions === 0) {
         progressIcon = <FontAwesomeIcon fontSize={30} icon={faLightbulb} className='text-white'/>;
-    } else if (questionReview.easiness < 2.5) {
+    } else if (questionReview[0].easiness < 2.5) {
         progressIcon = <FontAwesomeIcon fontSize={30} icon={faBookOpen} className='text-white'/>
     } else {
         progressIcon = <FontAwesomeIcon fontSize={30} icon={faCircleCheck} className='text-white'/>

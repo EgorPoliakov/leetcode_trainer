@@ -16,6 +16,7 @@ function Cards() {
     const deckData = location.state;
     const [isLoading, setIsLoadingHandler] = context.loadingContext;
     const [cardsFinished, setCardsFinished] = useState(0);
+    const [isFetchNewCard, setIsFetchNewCard] = useState(false);
 
     const [deck, setDeck] = useState([]);
     const [deckReview, setDeckReview] = useState([]);
@@ -34,7 +35,7 @@ function Cards() {
     }, [deckData.id, setIsLoadingHandler]);
 
     const finishCardHandler = async (quality) => {
-        const currentCard = deck[currentCardIdx];
+        const currentCard = deckReview[currentCardIdx];
         const endpoints = constants.endpoints;
         
         if (currentCard.question_reviews.length === 0) {
@@ -46,15 +47,16 @@ function Cards() {
             }
             const url = `${endpoints.domain}/${endpoints.prefixes.cards}/reviews`;
             const response = await api.post(url, requestData);
-            return;
+            return response;
         }
 
-        const reviewId = deck[currentCardIdx].question_reviews[0].id;
+        const reviewId = deckReview[currentCardIdx].question_reviews[0].id;
         const url = `${endpoints.domain}/${endpoints.prefixes.cards}/reviews/${reviewId}`;
 
         const requestData = {quality: quality};
 
         const response = await api.put(url, requestData);
+        return response;
     }
 
     const updateCardHandler = (quality) => {
@@ -66,11 +68,14 @@ function Cards() {
 
     }
 
-    const addNewCardHandler = () => {
+    const addNewCardHandler = async () => {
         setDeckReview((prev) => {
             const newCard = deckNew.shift();
-            return [newCard, ...prev];
+            const newDeck = [...prev];
+            newDeck.splice(currentCardIdx, 0, newCard);
+            return newDeck;
         });
+        setIsFetchNewCard(true);
     }
 
     useEffect(() => {
@@ -79,8 +84,8 @@ function Cards() {
     }, [fetchDeck]);
 
     useEffect(() => {
+        console.log(deck);
         const deckNew = deck.filter((card) => {
-            console.log(card.question_reviews.length);
             return card.question_reviews.length === 0;
         });
     
@@ -91,6 +96,17 @@ function Cards() {
         setDeckNew(deckNew);
         setDeckReview(deckReview);
     }, [deck]);
+
+    useEffect(() => {
+        if (isFetchNewCard) {
+            const createCardReview = async () => {
+                const response = await finishCardHandler(3);
+                deckReview[currentCardIdx].question_reviews.push(response.data);
+                setIsFetchNewCard(false);
+            }
+            createCardReview();
+        }
+    }, [deckReview, isFetchNewCard]);
 
     let cardElement = null;
     let progressElement = null;

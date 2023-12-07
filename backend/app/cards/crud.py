@@ -58,18 +58,13 @@ def read_user_reviews(db: Session, user_id: str):
     return user_reviews
 
 def create_review(db: Session, review: schemas.QuestionReviewCreate):
-    sm2_review = SMTwo.first_review(
-        quality=review.quality, 
-        review_date=date.today()
-    )
-
     db_question_review = models.QuestionReview(
         question_card_id=review.question_card_id,
         user_id=review.user_id,
-        easiness = sm2_review.easiness,
-        interval = sm2_review.interval,
-        repetitions = sm2_review.repetitions,
-        review_date = sm2_review.review_date
+        easiness=2.5,
+        interval=0,
+        repetitions=0,
+        review_date=date.today()
     )
     
     db.add(db_question_review)

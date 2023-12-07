@@ -88,13 +88,13 @@ function Decks() {
     const settings = {
         dots: false,
         infinite: false,
-        speed: 500,
+        speed: 300,
         slidesToShow: 5,
         slidesToScroll: 1,
     };
 
     const decksPage = (
-        <div className='grid grid-cols-1 gap-5 px-10'>
+        <div className='grid grid-cols-1 gap-5 px-32'>
             <div>
                 <h2 className='text-white text-2xl font-semibold'>Basic Topics</h2>
                 <Slider {...settings}>
