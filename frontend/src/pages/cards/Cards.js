@@ -9,6 +9,7 @@ import { Card, WholeScreenPopUp } from '../../components';
 import api from '../../Api';
 import constants from '../../constants';
 import { Button } from '@material-tailwind/react';
+import { computeCardImportance } from './utils';
 
 function Cards() {
     const location = useLocation();
@@ -30,7 +31,14 @@ function Cards() {
         const endpoints = constants.endpoints;
         const url = `${endpoints.domain}/${endpoints.prefixes.cards}/decks/${deckData.id}/study`
         const response = await api.get(url);
-        setDeck(response.data);
+        const deck = response.data;
+        deck.sort((cardA, cardB) => {
+            const importanceA = computeCardImportance(cardA);
+            const importanceB = computeCardImportance(cardB);
+            return importanceB - importanceA;
+        });
+        
+        setDeck(deck);
         setIsLoadingHandler(false);
     }, [deckData.id, setIsLoadingHandler]);
 
@@ -70,9 +78,14 @@ function Cards() {
 
     const addNewCardHandler = async () => {
         setDeckReview((prev) => {
-            const newCard = deckNew.shift();
+            const newCard = deckNew[0];
             const newDeck = [...prev];
             newDeck.splice(currentCardIdx, 0, newCard);
+            return newDeck;
+        });
+        setDeckNew((prev) => {
+            const newDeck = [...prev];
+            newDeck.shift();
             return newDeck;
         });
         setIsFetchNewCard(true);
@@ -84,7 +97,6 @@ function Cards() {
     }, [fetchDeck]);
 
     useEffect(() => {
-        console.log(deck);
         const deckNew = deck.filter((card) => {
             return card.question_reviews.length === 0;
         });
@@ -112,7 +124,6 @@ function Cards() {
     let progressElement = null;
 
     if (deckReview.length !== 0) {
-        console.log(deckReview);
         cardElement = <Card updateCardHandler={updateCardHandler} cardData={deckReview[currentCardIdx]}/>;
             progressElement = <div className='w-96 mt-5'>
                 <ProgressBar 
@@ -137,7 +148,7 @@ function Cards() {
         <>
             <div className='col-span-full bg-main'>
                 <h2 className='text-3xl font-bold text-center justify-self-start p-5 text-white'>{deckData.title}</h2>
-                <Button onClick={addNewCardHandler} className='bg-second'>New card</Button>
+                {deckNew.length !== 0 ? <Button onClick={addNewCardHandler} className='bg-second'>New card</Button> : null}
                 <div className='flex flex-col h-full items-center justify-center -mt-16'>
                     {!isLoading ? cardElement : null}
                     {!isLoading ? progressElement: null}

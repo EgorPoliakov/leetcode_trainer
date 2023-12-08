@@ -63,11 +63,11 @@ function Decks() {
     
     decks.map((deck) => {
         const deckElement = (
-            <>
+            <div key={deck.id}>
                 <div className='mx-2 mt-5'>
                     <Deck deckData={deck} />
                 </div>
-            </>
+            </div>
         );
         switch (deck.difficulty) {
             case 0:
@@ -91,6 +91,7 @@ function Decks() {
         speed: 300,
         slidesToShow: 5,
         slidesToScroll: 1,
+        
     };
 
     const decksPage = (
