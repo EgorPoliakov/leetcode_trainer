@@ -85,19 +85,20 @@ for question in data:
         diffuculty = 2
         
     question_instance = Question(
-        title = question['title'],
-        url = question['url'],
-        difficulty = diffuculty,
-        is_premium = True if question['is_premium'] == 'yes' else False,
+        title=question['title'],
+        url=question['url'],
+        difficulty=diffuculty,
+        is_premium=True if question['is_premium'] == 'yes' else False,
+        likes=question['likes'],
+        dislikes=question['dislikes'],
+        total_submissions=question['total_submissions'],
+        accepted_submissions=question['accepted_submissions']
     )
     
     for tag_name in question['tag']:
         session_tag = session.query(QuestionTag).filter(QuestionTag.name == tag_name).one()
         question_instance.question_tags.append(session_tag)
         session_tag.questions.append(question_instance)
-        
-    session.add(question_instance)
-    session.commit()
         
     for sub_tag_name in question['sub_tag']:
         session_sub_tag = session.query(QuestionSubTag).filter(QuestionSubTag.name == sub_tag_name).one()

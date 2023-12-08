@@ -31,6 +31,10 @@ class Question(Base):
     url = Column(String)
     difficulty = Column(Integer)
     is_premium = Column(Boolean)
+    likes = Column(Integer)
+    dislikes = Column(Integer)
+    total_submissions = Column(Integer)
+    accepted_submissions = Column(Integer)
 
     question_card = relationship('QuestionCard', back_populates='question')
     question_tags = relationship('QuestionTag', secondary=QuestionToTag, back_populates='questions')

@@ -38,6 +38,10 @@ class QuestionRead(BaseModel):
     is_premium: bool
     question_tags: list[QuestionTagRead]
     question_sub_tags: list[QuestionSubTagRead]
+    likes: int
+    dislikes: int
+    total_submissions: int
+    accepted_submissions: int
 
 class QuestionReviewBase(BaseModel):
     question_card_id: int
