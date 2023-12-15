@@ -113,7 +113,7 @@ def read_user_decks(db: Session, user: GoogleUser, skip: int=0, limit: int=100):
                 deck.cards_to_review += 1
             elif user_review.review_date <= date.today():
                 deck.cards_to_review += 1
-            elif user_review.easiness > 2.5:
+            elif user_review.easiness >= 3:
                 deck.cards_learned += 1
             else:
                 deck.cards_studying += 1  

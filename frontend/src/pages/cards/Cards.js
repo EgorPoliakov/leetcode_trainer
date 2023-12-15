@@ -68,7 +68,7 @@ function Cards() {
     }
 
     const updateCardHandler = (quality) => {
-        // finishCardHandler(quality);
+        finishCardHandler(quality);
         setCardsFinished((prevCardFinishedToReview) => prevCardFinishedToReview + 1);
         setCurrentCardIdx(
             (prevCardIdx) => prevCardIdx + 1

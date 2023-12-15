@@ -24,7 +24,7 @@ function Card({ updateCardHandler, cardData }) {
         progressIcon = null;
     } else if (questionReview[0].repetitions === 0) {
         progressIcon = <FontAwesomeIcon fontSize={30} icon={faLightbulb} className='text-white'/>;
-    } else if (questionReview[0].easiness < 2.5) {
+    } else if (questionReview[0].easiness < 3) {
         progressIcon = <FontAwesomeIcon fontSize={30} icon={faBookOpen} className='text-white'/>
     } else {
         progressIcon = <FontAwesomeIcon fontSize={30} icon={faCircleCheck} className='text-white'/>
@@ -57,8 +57,8 @@ function Card({ updateCardHandler, cardData }) {
                 </div>
             </div>
             <div className='flex justify-around items-center p-2 h-16'>
-                <FontAwesomeIcon fontSize={30} icon={faThumbsDown} className='text-white cursor-pointer hover:text-second transition duration-300' onClick={(event) => buttonClick(easy_quality, -100)}/>
-                <FontAwesomeIcon fontSize={30} icon={faThumbsUp} className='text-white cursor-pointer hover:text-second transition duration-300' onClick={(event) => buttonClick(again_quality, 100)}/>
+                <FontAwesomeIcon fontSize={30} icon={faThumbsDown} className='text-white cursor-pointer hover:text-second transition duration-300' onClick={(event) => buttonClick(again_quality, -100)}/>
+                <FontAwesomeIcon fontSize={30} icon={faThumbsUp} className='text-white cursor-pointer hover:text-second transition duration-300' onClick={(event) => buttonClick(easy_quality, 100)}/>
 
             </div>
         </animated.div>}
