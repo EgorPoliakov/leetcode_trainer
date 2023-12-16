@@ -86,16 +86,42 @@ function Decks() {
     });
 
     const settings = {
-        dots: false,
         infinite: false,
         speed: 300,
         slidesToShow: 5,
         slidesToScroll: 1,
-        
-    };
+        responsive: [
+            {
+                breakpoint: 1536,
+                settings: {
+                    slidesToShow: 4
+                }
+
+            },
+            {
+                breakpoint: 1280,
+                settings: {
+                    slidesToShow: 3
+                }
+
+            },
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+        ]
+      };
 
     const decksPage = (
-        <div className='grid grid-cols-1 gap-5 px-32'>
+        <div className='grid grid-cols-1 gap-5 px-16'>
             <div>
                 <h2 className='text-white text-2xl font-semibold'>Basic Topics</h2>
                 <Slider {...settings}>

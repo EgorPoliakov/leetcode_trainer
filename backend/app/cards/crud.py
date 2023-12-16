@@ -110,14 +110,13 @@ def read_user_decks(db: Session, user: GoogleUser, skip: int=0, limit: int=100):
 
             if user_review is None:
                 deck.cards_new += 1
-                deck.cards_to_review += 1
-            elif user_review.review_date <= date.today():
-                deck.cards_to_review += 1
-            elif user_review.easiness >= 3:
-                deck.cards_learned += 1
             else:
-                deck.cards_studying += 1  
-
+                if user_review.review_date <= date.today():
+                    deck.cards_to_review += 1
+                if user_review.easiness >= 2.5:
+                    deck.cards_learned += 1
+                else:
+                    deck.cards_studying += 1  
     return db_decks
 
 def create_deck(db: Session, deck: schemas.DeckCreate):
