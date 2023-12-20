@@ -44,7 +44,7 @@ def read_deck_for_study(db: Session, deck_id: int, user_id: str):
         .join(models.QuestionCard.decks)
         .filter(models.Deck.id == deck_id)
         .outerjoin(models.QuestionReview)
-        .filter(or_(models.QuestionReview.id.is_(None), and_(models.QuestionReview.user_id == user_id, models.QuestionReview.review_date <= date.today())))
+        .filter(or_(models.QuestionReview.id.is_(None), models.QuestionReview.user_id == user_id))
         .all()
     )
     return cards

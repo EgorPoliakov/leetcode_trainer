@@ -14,7 +14,7 @@ function DifficultyLabel({difficulty, type}) {
     }
     
     return (
-        <div className={`focus:outline-none ${difficultyColor} font-medium rounded-xl text-sm mt-auto text-white px-4 py-1`}>
+        <div className={`focus:outline-none ${difficultyColor} font-medium rounded-xl text-sm mt-auto text-center text-white px-4 py-1`}>
             {difficultyText}
         </div>
     );

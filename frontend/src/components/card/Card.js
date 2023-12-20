@@ -19,7 +19,6 @@ function Card({ updateCardHandler, cardData }) {
     };
 
     let progressIcon = null;
-    console.log(questionReview)
     if (questionReview.length === 0) {
         progressIcon = null;
     } else if (questionReview[0].repetitions === 0) {

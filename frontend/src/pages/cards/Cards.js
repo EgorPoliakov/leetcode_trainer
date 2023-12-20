@@ -1,5 +1,5 @@
-import React from 'react'
-import { useState, useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react'
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useOutletContext } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,12 +9,12 @@ import { Card, WholeScreenPopUp } from '../../components';
 import api from '../../Api';
 import constants from '../../constants';
 import { Button } from '@material-tailwind/react';
-import { computeCardImportance } from './utils';
 
 function Cards() {
     const location = useLocation();
     const context = useOutletContext();
-    const deckData = location.state;
+    const deckState = location.state.deckState;
+    const deckData = location.state.deckData;
     const [isLoading, setIsLoadingHandler] = context.loadingContext;
     const [cardsFinished, setCardsFinished] = useState(0);
     const [isFetchNewCard, setIsFetchNewCard] = useState(false);
@@ -26,23 +26,7 @@ function Cards() {
 
     const percentFinished = deckReview.length !== 0 ? 100 * cardsFinished / deckReview.length : 0;
 
-    const fetchDeck = useCallback(async () => {
-        setIsLoadingHandler(true);
-        const endpoints = constants.endpoints;
-        const url = `${endpoints.domain}/${endpoints.prefixes.cards}/decks/${deckData.id}/study`
-        const response = await api.get(url);
-        const deck = response.data;
-        deck.sort((cardA, cardB) => {
-            const importanceA = computeCardImportance(cardA);
-            const importanceB = computeCardImportance(cardB);
-            return importanceB - importanceA;
-        });
-        
-        setDeck(deck);
-        setIsLoadingHandler(false);
-    }, [deckData.id, setIsLoadingHandler]);
-
-    const finishCardHandler = async (quality) => {
+    const finishCardHandler = useCallback(async (quality) => {
         const currentCard = deckReview[currentCardIdx];
         const endpoints = constants.endpoints;
         
@@ -65,7 +49,7 @@ function Cards() {
 
         const response = await api.put(url, requestData);
         return response;
-    }
+    }, [currentCardIdx, deckReview]);
 
     const updateCardHandler = (quality) => {
         finishCardHandler(quality);
@@ -92,9 +76,8 @@ function Cards() {
     }
 
     useEffect(() => {
-        fetchDeck();
-        
-    }, [fetchDeck]);
+        setDeck(deckState);
+    }, [deckState]);
 
     useEffect(() => {
         const deckNew = deck.filter((card) => {
@@ -118,7 +101,7 @@ function Cards() {
             }
             createCardReview();
         }
-    }, [deckReview, isFetchNewCard]);
+    }, [deckReview, isFetchNewCard, currentCardIdx, finishCardHandler]);
 
     let cardElement = null;
     let progressElement = null;

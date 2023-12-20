@@ -39,7 +39,7 @@ function Deck({deckData}) {
                         <div className='text-xl font-bold'>{cardsNew}</div>
                         <div className='text-gray-400'>New</div>
                     </div>
-                    <Link to='/study' state={deckData} className="text-xl text-second w-16">
+                    <Link to='/deck_table' state={deckData} className="text-xl text-second w-16">
                         <CircularProgressbarWithChildren value={percent}>
                                 <FontAwesomeIcon icon={faPlay} />
                         </CircularProgressbarWithChildren>
