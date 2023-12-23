@@ -23,7 +23,7 @@ function ProfileMenu({logoutHandler, user, className}) {
                 </div>
             </div>
         </MenuHandler>
-        <MenuList className="min-w-[180px] p-3 bg-third text-white border-none">
+        <MenuList className="min-w-[180px] p-3 bg-third text-white border-none z-50">
           <MenuItem className="flex items-center gap-2">
             <svg
               width="16"

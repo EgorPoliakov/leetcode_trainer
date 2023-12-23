@@ -18,7 +18,7 @@ function Home() {
     }
 
     return (
-      <>
+      <div className="col-span-full bg-main">
           <Hero>
           </Hero>
           {popUp}
@@ -42,7 +42,7 @@ function Home() {
               />
             </div>
           </section>
-      </>
+      </div>
     );
 }
 

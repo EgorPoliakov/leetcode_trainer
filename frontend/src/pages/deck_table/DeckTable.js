@@ -3,6 +3,7 @@ import { useLocation, useOutletContext, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Button } from '@material-tailwind/react';
+import ProgressBar from "@ramonak/react-progress-bar";
 import api from '../../Api';
 import constants from '../../constants';
 import { computeCardImportance } from './utils';
@@ -42,6 +43,7 @@ function DeckTable() {
         const reviews = card.question_reviews;
         let reviewDate = 'New Card';
         let reviewStreak = 0;
+        let percentFinished = 0;
         if (reviews.length !== 0) {
             reviewDate = new Date(reviews[0].review_date).toLocaleDateString({
                 day: 'numeric',
@@ -49,13 +51,23 @@ function DeckTable() {
                 year: 'numeric'
             });
             reviewStreak = reviews[0].repetitions;
+            percentFinished = reviews[0].easiness * 100 / constants.generalConstants.learnedEasinessThreshold;
         }
         const difficulty = <DifficultyLabel difficulty={card.question.difficulty}/>
-        const row = [question.title, difficulty, reviewDate, reviewStreak];
+
+        const progress = <div>
+            <ProgressBar 
+            completed={(percentFinished)} 
+            width='100%' 
+            height='10px'
+            bgColor='#8F5AFF'
+            isLabelVisible={false}/>
+        </div>
+        const row = [question.title, difficulty, progress, reviewDate, reviewStreak];
         return row;
     });
 
-    const titleRow = ['Card', 'Difficulty', 'Next Review', 'Review Streak'];
+    const titleRow = ['Card', 'Difficulty', 'Progress', 'Next Review', 'Review Streak'];
     const deckForStudy = deck.filter((card) => {
         if (card.question_reviews.length === 0) {
             return true;
@@ -66,7 +78,6 @@ function DeckTable() {
         return review_date < today;
     });
 
-    console.log(deckForStudy);
     return (
         <div className='col-span-full bg-main'>
             <h2 className='text-3xl font-bold text-center justify-self-start p-5 text-white'>{deckData.title}</h2>

@@ -43,6 +43,10 @@ const constants = {
             auth: 'auth',
             cards: 'cards'
         }
+    },
+
+    generalConstants: {
+        learnedEasinessThreshold: 2,
     }
 }
 

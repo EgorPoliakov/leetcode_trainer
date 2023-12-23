@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { useSpring, animated } from 'react-spring';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown, faLightbulb, faBookOpen, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import constants from '../../constants';
 
 import DifficultyLabel from '../difficulty_label/DifficultyLabel';
 
@@ -23,7 +24,7 @@ function Card({ updateCardHandler, cardData }) {
         progressIcon = null;
     } else if (questionReview[0].repetitions === 0) {
         progressIcon = <FontAwesomeIcon fontSize={30} icon={faLightbulb} className='text-white'/>;
-    } else if (questionReview[0].easiness < 2.5) {
+    } else if (questionReview[0].easiness < constants.generalConstants.learnedEasinessThreshold) {
         progressIcon = <FontAwesomeIcon fontSize={30} icon={faBookOpen} className='text-white'/>
     } else {
         progressIcon = <FontAwesomeIcon fontSize={30} icon={faCircleCheck} className='text-white'/>
@@ -45,7 +46,7 @@ function Card({ updateCardHandler, cardData }) {
     const easy_quality = 5;
     return (
         <>
-            {<animated.div style={fadeOutAnimation} className='flex flex-col justify-between rounded-md bg-third shadow-md w-64 h-48'>
+            {<animated.div style={fadeOutAnimation} className='flex flex-col justify-between rounded-md bg-third shadow-md w-80 h-48'>
             <div className='flex bg-second rounded-t-md p-4 h-[80%]'>
                 <div className='flex flex-col items-start'>
                     <a href={question.url} target="_blank" rel="noopener noreferrer" className='text-white mb-3'>{question.title}</a>
