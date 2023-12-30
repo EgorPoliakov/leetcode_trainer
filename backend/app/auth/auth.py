@@ -51,5 +51,6 @@ async def login(request: Request):
 
 @auth_app.get('/logout')
 def logout(request: Request):
-    request.session.pop('user');
+    if 'user' in request.session:
+        request.session.pop('user');
     return {'message': 'logged out successfuly'}

@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import constants from './constants';
 axios.defaults.withCredentials = true
 
 const configHeaders = {
@@ -8,7 +8,7 @@ const configHeaders = {
 };
 
 const api = axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: constants.endpoints.domain,
     // headers: configHeaders
 });
 
